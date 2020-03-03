@@ -1,0 +1,13 @@
+Xing and Alden sitting next to each other
+4:39 PM on 03 March 2020
+
+Alden To Do for Friday (Don't be a Scrub)
+-----------------------------------------
+Use SIFT/SURF Keypoint Matching to Do Some Useful Shit
+Find another Deterministic Method that'll be useful here
+Do YOLO transfer practical
+
+Xing To Do for Friday
+---------------------
+YOLO transfer learning for our dataset
+
