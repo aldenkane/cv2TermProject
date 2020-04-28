@@ -1,0 +1,90 @@
+Training Object Samples: 1
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 324
+False Positives: 147
+False Negatives: 107
+Precision: 0.6879
+Recall: 0.7517
+------------------------------------------
+Training Object Samples: 3
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 280
+False Positives: 149
+False Negatives: 151
+Precision: 0.6527
+Recall: 0.6497
+------------------------------------------
+Training Object Samples: 5
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 297
+False Positives: 120
+False Negatives: 134
+Precision: 0.7122
+Recall: 0.6891
+------------------------------------------
+Training Object Samples: 7
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 280
+False Positives: 111
+False Negatives: 151
+Precision: 0.7161
+Recall: 0.6497
+------------------------------------------
+Training Object Samples: 9
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 273
+False Positives: 108
+False Negatives: 158
+Precision: 0.7165
+Recall: 0.6334
+------------------------------------------
+Training Object Samples: 1
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 141
+False Positives: 53
+False Negatives: 290
+Precision: 0.7268
+Recall: 0.3271
+------------------------------------------
+Training Object Samples: 3
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 53
+False Positives: 33
+False Negatives: 378
+Precision: 0.6163
+Recall: 0.123
+------------------------------------------
+Training Object Samples: 5
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 122
+False Positives: 13
+False Negatives: 309
+Precision: 0.9037
+Recall: 0.2831
+------------------------------------------
+Training Object Samples: 7
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 87
+False Positives: 20
+False Negatives: 344
+Precision: 0.8131
+Recall: 0.2019
+------------------------------------------
+Training Object Samples: 9
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 83
+False Positives: 13
+False Negatives: 348
+Precision: 0.8646
+Recall: 0.1926
+------------------------------------------
