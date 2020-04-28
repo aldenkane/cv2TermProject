@@ -59,7 +59,7 @@ for m, n in matches:
 
 img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, good, 0, flags=2)
 
-cv2.imwrite(img3, '../tfeat_logs/images')
+cv2.imwrite('../tfeat_logs/images', img3)
 
 plt.imshow(img3), plt.show()
 
