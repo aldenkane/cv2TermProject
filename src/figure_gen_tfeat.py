@@ -42,7 +42,7 @@ IGNORE_THRESHOLD = 2
 DESIRED_SAMPLE = 'mobi'
 
 # See if o1, o2, o3
-DESIRED_OBJECT_CLASS = 'o2'
+DESIRED_OBJECT_CLASS = 'o1'
 OBJECT_PATH = OBJECTS_DIR_PATH + os.path.sep + DESIRED_OBJECT_CLASS
 
 # Get Random Number for End of Image
