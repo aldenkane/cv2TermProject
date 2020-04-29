@@ -92,6 +92,7 @@ object_1_image = cv2.resize(object_1_image, (0,0), fx = RES_SCALE_OBJ, fy = RES_
 bin_kpts, bin_desc = brisk.detectAndCompute(bin_image, mask = bin_mask)
 object_1_kpts, object_1_desc = brisk.detectAndCompute(object_1_image, None)
 
+print('Getting tfeat descriptors')
 # Get tfeat Descriptors
 mag_factor = 3
 desc_tfeat1 = tfeat_utils.describe_opencv(tfeat, bin_image, bin_kpts, 32, mag_factor)
@@ -99,6 +100,8 @@ desc_tfeat2 = tfeat_utils.describe_opencv(tfeat, object_1_image, object_1_kpts, 
 
 # Match tfeat descriptors
 matches = bf.knnMatch(desc_tfeat1, desc_tfeat2, k=2)
+print('Matched Descriptors')
+
 # Apply ratio test
 good = []
 for m, n in matches:
@@ -106,6 +109,8 @@ for m, n in matches:
         good.append([m])
 
 img3 = cv2.drawMatchesKnn(bin_image, bin_kpts, object_1_image, object_1_kpts, good, 0, flags=2)
+print('drew matches')
 
-im_name = '../tfeat_logs/images/tfeat_test_' + str(sampled_photos[0])
+im_name = '../tfeat_logs/images/tfeat_test_1.jpg'
 cv2.imwrite(str(im_name), img3)
+print('Wrote Photo')
