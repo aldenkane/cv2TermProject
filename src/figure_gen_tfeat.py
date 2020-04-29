@@ -21,6 +21,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import torch.backends.cudnn as cudnn
 import tfeat_utils
+import random
 from matplotlib import pyplot as plt
 from alden_cv2_functions import get_groundtruth_labels, removeElements, match_found_to_groundtruth, generate_bin_mask
 
@@ -36,7 +37,7 @@ RES_SCALE_OBJ = 0.2
 PATH_TO_TEST_JPGS = '../collection/mobi_test_jpgs'
 PATH_TO_TEST_JSON = '../collection/mobi_test_json'
 OBJECTS_DIR_PATH = '../objects/T3'
-LOWE_THRESHOLD = 0.6
+LOWE_THRESHOLD = 0.7
 IGNORE_THRESHOLD = 2
 DESIRED_SAMPLE = 'mobi'
 
@@ -92,15 +93,19 @@ object_1_image = cv2.resize(object_1_image, (0,0), fx = RES_SCALE_OBJ, fy = RES_
 bin_kpts, bin_desc = brisk.detectAndCompute(bin_image, mask = bin_mask)
 object_1_kpts, object_1_desc = brisk.detectAndCompute(object_1_image, None)
 
-print('Getting tfeat descriptors')
 # Get tfeat Descriptors
 mag_factor = 3
 desc_tfeat1 = tfeat_utils.describe_opencv(tfeat, bin_image, bin_kpts, 32, mag_factor)
 desc_tfeat2 = tfeat_utils.describe_opencv(tfeat, object_1_image, object_1_kpts, 32, mag_factor)
 
+print('tfeat Bin Descriptors')
+print(desc_tfeat1)
+print('-----------------------')
+print('tfeat Object Descriptors')
+print(desc_tfeat2)
+
 # Match tfeat descriptors
 matches = bf.knnMatch(desc_tfeat1, desc_tfeat2, k=2)
-print('Matched Descriptors')
 
 # Apply ratio test
 good = []
@@ -109,8 +114,9 @@ for m, n in matches:
         good.append([m])
 
 img3 = cv2.drawMatchesKnn(bin_image, bin_kpts, object_1_image, object_1_kpts, good, 0, flags=2)
-print('drew matches')
 
-im_name = '../tfeat_logs/images/tfeat_test_1.jpg'
+# Get Random Number for End of Image
+append = random.random()
+
+im_name = '../tfeat_logs/images/tfeat_test_' + str(append) + '.jpg'
 cv2.imwrite(str(im_name), img3)
-print('Wrote Photo')
