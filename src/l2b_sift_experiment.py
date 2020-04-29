@@ -66,7 +66,7 @@ for item in os.listdir(PATH_TO_TEST_JPGS):
 
         #######################################
         # Section 4: Iterate through SIFT Descriptor Libraries and Perform Matching
-        #######################################
+        ##33#####################################
         for i,lib in enumerate(DESCRIPTOR_FILES):
             obj_desc = np.load(str(DESCRIPTOR_FILES[i]))
             matches = flann.knnMatch(bin_desc, obj_desc, k=2)

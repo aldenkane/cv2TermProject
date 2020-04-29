@@ -24,10 +24,20 @@ import tfeat_utils
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
+import random
 
+# Append for Distinct Filename
+append = random.random()
+
+# Original Test
 img1 = cv2.imread('../imgs/v_churchill/1.ppm', 0)
 img2 = cv2.imread('../imgs/v_churchill/6.ppm', 0)
 
+# Test from Obj to Bin
+img1 = cv2.imread('../objects/T3/o2/mobi/m_Spray_Sunscreen1.jpg', 0)
+img2 = cv2.imread('../collection/mobi_test_jpgs/l2_pl2_m_side_2.jpg', 0)
+
+# Test from Bin to Bin to See if It Matches Close Keypoints
 brisk = cv2.BRISK_create()
 kp1, des1 = brisk.detectAndCompute(img1, None)
 kp2, des2 = brisk.detectAndCompute(img2, None)
@@ -40,8 +50,10 @@ for m, n in matches:
     if m.distance < 0.8 * n.distance:
         good.append([m])
 
-img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, good, 0, flags=2)
-plt.imshow(img3), plt.show()
+img_brisk = cv2.drawMatchesKnn(img1, kp1, img2, kp2, good, 0, flags=2)
+plt.imshow(img_brisk), plt.show()
+im_brisk_filename = '../tfeat_logs/images/tfeat_simple_brisk_' + str(append) + '.jpg'
+cv2.imwrite(str(im_brisk_filename), img_brisk)
 
 # mag_factor is how many times the original keypoint scale
 # is enlarged to generate a patch from a keypoint
@@ -57,10 +69,10 @@ for m, n in matches:
     if m.distance < 0.8 * n.distance:
         good.append([m])
 
-img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, good, 0, flags=2)
+img_tfeat = cv2.drawMatchesKnn(img1, kp1, img2, kp2, good, 0, flags=2)
 
-cv2.imwrite('../tfeat_logs/images/test.jpg', img3)
-
-plt.imshow(img3), plt.show()
+plt.imshow(img_tfeat), plt.show()
+im_tfeat_filename = '../tfeat_logs/images/tfeat_simple_cnn_' + str(append) + '.jpg'
+cv2.imwrite(str(im_tfeat_filename), img_tfeat)
 
 print('Finished Program!')
