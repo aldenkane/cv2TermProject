@@ -29,7 +29,7 @@ DESIRED_SAMPLE = 'mobi'
 
 
 # See if o1, o2, o3
-DESIRED_OBJECT_CLASS = 'o5'
+DESIRED_OBJECT_CLASS = 'o9'
 OBJECT_PATH = OBJECTS_DIR_PATH + os.path.sep + DESIRED_OBJECT_CLASS
 
 #######################################
@@ -74,7 +74,7 @@ bin_kpts, bin_desc = sift.detectAndCompute(bin_image, mask = bin_mask)
 object_1_kpts, object_1_desc = sift.detectAndCompute(object_1_image, None)
 
 # Use flann matcher
-matches = flann.knnMatch(bin_desc, object_1_desc, k=2)
+matches = flann.knnMatch(object_1_desc, bin_desc, k=2)
 # store all the good matches as per Lowe's ratio test.
 good = []
 for m, n in matches:
@@ -94,7 +94,8 @@ draw_params = dict(matchColor = (0,255,0),
                    matchesMask = matchesMask,
                    flags = 0)
 
-img3 = cv2.drawMatchesKnn(bin_image, bin_kpts, object_1_image, object_1_kpts, matches, None, **draw_params)
+# Swapped bin and Obj
+img3 = cv2.drawMatchesKnn(object_1_image, object_1_kpts, bin_image, bin_kpts, matches, None, **draw_params)
 
 plt.imshow(bin_mask,), plt.show()
 plt.imshow(img3,), plt.show()

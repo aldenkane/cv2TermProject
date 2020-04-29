@@ -37,14 +37,16 @@ RES_SCALE_OBJ = 0.2
 PATH_TO_TEST_JPGS = '../collection/mobi_test_jpgs'
 PATH_TO_TEST_JSON = '../collection/mobi_test_json'
 OBJECTS_DIR_PATH = '../objects/T3'
-LOWE_THRESHOLD = 0.7
+LOWE_THRESHOLD = 0.8
 IGNORE_THRESHOLD = 2
 DESIRED_SAMPLE = 'mobi'
-
 
 # See if o1, o2, o3
 DESIRED_OBJECT_CLASS = 'o2'
 OBJECT_PATH = OBJECTS_DIR_PATH + os.path.sep + DESIRED_OBJECT_CLASS
+
+# Get Random Number for End of Image
+append = random.random()
 
 #######################################
 # Section 2: Initiate tfeat, BRISK, and FLANN Matchers
@@ -60,7 +62,6 @@ tfeat.eval()
 
 # Initiate BRISK Matcher
 brisk = cv2.BRISK_create()
-bf = cv2.BFMatcher(cv2.NORM_L2)
 
 #######################################
 # Section 3: Select a Random Bin, Random Objects, Detect and Compute SIFT, Match Keypoints
@@ -93,19 +94,34 @@ object_1_image = cv2.resize(object_1_image, (0,0), fx = RES_SCALE_OBJ, fy = RES_
 bin_kpts, bin_desc = brisk.detectAndCompute(bin_image, mask = bin_mask)
 object_1_kpts, object_1_desc = brisk.detectAndCompute(object_1_image, None)
 
+bf = cv2.BFMatcher(cv2.NORM_HAMMING)
+matches = bf.knnMatch(object_1_desc, bin_desc, k=2)
+# Apply ratio test
+good = []
+for m, n in matches:
+    if m.distance < LOWE_THRESHOLD * n.distance:
+        good.append([m])
+
+img_brisk = cv2.drawMatchesKnn(object_1_image, object_1_kpts, bin_image, bin_kpts, good, 0, flags=2)
+im_brisk_filename = '../tfeat_logs/images/tfeat_figure_gen_BRISK_' + str(append) + '.jpg'
+cv2.imwrite(str(im_brisk_filename), img_brisk)
+
 # Get tfeat Descriptors
 mag_factor = 3
-desc_tfeat1 = tfeat_utils.describe_opencv(tfeat, bin_image, bin_kpts, 32, mag_factor)
-desc_tfeat2 = tfeat_utils.describe_opencv(tfeat, object_1_image, object_1_kpts, 32, mag_factor)
+bin_tfeat_desc = tfeat_utils.describe_opencv(tfeat, bin_image, bin_kpts, 32, mag_factor)
+obj_tfeat_desc = tfeat_utils.describe_opencv(tfeat, object_1_image, object_1_kpts, 32, mag_factor)
 
 print('tfeat Bin Descriptors')
-print(desc_tfeat1)
+print(bin_tfeat_desc)
 print('-----------------------')
 print('tfeat Object Descriptors')
-print(desc_tfeat2)
+print(obj_tfeat_desc)
+
+# Update Matcher
+bf = cv2.BFMatcher(cv2.NORM_L2)
 
 # Match tfeat descriptors
-matches = bf.knnMatch(desc_tfeat1, desc_tfeat2, k=2)
+matches = bf.knnMatch(obj_tfeat_desc, bin_tfeat_desc, k=2)
 
 # Apply ratio test
 good = []
@@ -113,10 +129,7 @@ for m, n in matches:
     if m.distance < LOWE_THRESHOLD * n.distance:
         good.append([m])
 
-img3 = cv2.drawMatchesKnn(bin_image, bin_kpts, object_1_image, object_1_kpts, good, 0, flags=2)
+tfeat_img = cv2.drawMatchesKnn(bin_image, bin_kpts, object_1_image, object_1_kpts, good, 0, flags=2)
 
-# Get Random Number for End of Image
-append = random.random()
-
-im_name = '../tfeat_logs/images/tfeat_test_' + str(append) + '.jpg'
-cv2.imwrite(str(im_name), img3)
+im_name = '../tfeat_logs/images/tfeat_figure_gen_cnn_' + str(append) + '.jpg'
+cv2.imwrite(str(im_name), tfeat_img)

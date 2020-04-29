@@ -1,0 +1,110 @@
+BIN --> OBJ
+Training Object Samples: 1
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 166
+False Positives: 76
+False Negatives: 265
+Precision: 0.686
+Recall: 0.3852
+Time to Run: 11.357681035995483 seconds
+------------------------------------------
+BIN --> OBJ
+Training Object Samples: 3
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 66
+False Positives: 67
+False Negatives: 365
+Precision: 0.4962
+Recall: 0.1531
+Time to Run: 14.534173011779785 seconds
+------------------------------------------
+BIN --> OBJ
+Training Object Samples: 5
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 139
+False Positives: 13
+False Negatives: 292
+Precision: 0.9145
+Recall: 0.3225
+Time to Run: 14.116549253463745 seconds
+------------------------------------------
+BIN --> OBJ
+Training Object Samples: 7
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 94
+False Positives: 28
+False Negatives: 337
+Precision: 0.7705
+Recall: 0.2181
+Time to Run: 14.799787998199463 seconds
+------------------------------------------
+BIN --> OBJ
+Training Object Samples: 9
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 91
+False Positives: 21
+False Negatives: 340
+Precision: 0.8125
+Recall: 0.2111
+Time to Run: 15.891130208969116 seconds
+------------------------------------------
+OBJ --> BIN
+Training Object Samples: 1
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 20
+False Positives: 4
+False Negatives: 411
+Precision: 0.8333
+Recall: 0.0464
+Time to Run: 9.473198890686035 seconds
+------------------------------------------
+OBJ --> BIN
+Training Object Samples: 3
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 63
+False Positives: 15
+False Negatives: 368
+Precision: 0.8077
+Recall: 0.1462
+Time to Run: 12.274850130081177 seconds
+------------------------------------------
+OBJ --> BIN
+Training Object Samples: 5
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 77
+False Positives: 26
+False Negatives: 354
+Precision: 0.7476
+Recall: 0.1787
+Time to Run: 12.095023155212402 seconds
+------------------------------------------
+OBJ --> BIN
+Training Object Samples: 7
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 100
+False Positives: 38
+False Negatives: 331
+Precision: 0.7246
+Recall: 0.232
+Time to Run: 13.509662866592407 seconds
+------------------------------------------
+OBJ --> BIN
+Training Object Samples: 9
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 119
+False Positives: 54
+False Negatives: 312
+Precision: 0.6879
+Recall: 0.2761
+Time to Run: 16.168066263198853 seconds
+------------------------------------------

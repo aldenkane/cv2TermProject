@@ -7,19 +7,23 @@ import cv2 as cv2
 import os
 import numpy as np
 import sys
+import time
 from alden_cv2_functions import get_groundtruth_labels, removeElements, match_found_to_groundtruth, generate_bin_mask
 
 #######################################
 # Section 1: Declare Globals
 #######################################
 
+# Get Time
+start_time = time.time()
+
 TRAIN_OBJECT_SAMPLES = 9
 CLASS_NAMES = ['Paintbrush', 'Spray_Sunscreen', 'Rub_Sunscreen', 'Dice_Container', 'Tape', 'Cetaphil', 'Sunglasses', 'Pillbottle', 'Fuzzy', 'Marker', 'Frisbee']
 DESCRIPTOR_FILES = []
-RES_SCALE_BIN = 0.45
+RES_SCALE_BIN = 0.6
 PATH_TO_TEST_JPGS = '../collection/mobi_test_jpgs'
 PATH_TO_TEST_JSON = '../collection/mobi_test_json'
-LOWE_THRESHOLD = 0.45
+LOWE_THRESHOLD = 0.6
 IGNORE_THRESHOLD = 2
 
 # Assemble List of Descriptor Files
@@ -69,7 +73,7 @@ for item in os.listdir(PATH_TO_TEST_JPGS):
         ##33#####################################
         for i,lib in enumerate(DESCRIPTOR_FILES):
             obj_desc = np.load(str(DESCRIPTOR_FILES[i]))
-            matches = flann.knnMatch(bin_desc, obj_desc, k=2)
+            matches = flann.knnMatch(obj_desc, bin_desc, k=2)
             # store all the good matches as per Lowe's ratio test.
             for m, n in matches:
                 if m.distance < LOWE_THRESHOLD * n.distance:
@@ -90,9 +94,11 @@ for item in os.listdir(PATH_TO_TEST_JPGS):
 
 PRECISION = round(TRUE_POSITIVES/(TRUE_POSITIVES+FALSE_POSITIVES+0.000001),4)
 RECALL = round(TRUE_POSITIVES/(TRUE_POSITIVES+FALSE_NEGATIVES+0.000001),4)
+TIME = (time.time() - start_time)
 
-with open('../sift_logs/final_experiment_newdesc_usingMask_logs.txt', 'a') as file:
+with open('../sift_logs/final_experiment_newdesc_usingMask__TIME_logs.txt', 'a') as file:
     sys.stdout = file
+    print('OBJ --> BIN')
     print('Training Object Samples: ' + str(TRAIN_OBJECT_SAMPLES))
     print('Ratio Test Value: ' + str(LOWE_THRESHOLD))
     print('Ignored Matches w/ Less than K Occurrences, K: ' + str(IGNORE_THRESHOLD))
@@ -101,6 +107,7 @@ with open('../sift_logs/final_experiment_newdesc_usingMask_logs.txt', 'a') as fi
     print('False Negatives: ' + str(FALSE_NEGATIVES))
     print('Precision: ' + str(PRECISION))
     print('Recall: ' + str(RECALL))
+    print('Time to Run: ' + str(TIME) + ' seconds')
     print('------------------------------------------')
 
 
