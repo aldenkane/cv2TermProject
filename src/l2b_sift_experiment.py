@@ -7,19 +7,19 @@ import cv2 as cv2
 import os
 import numpy as np
 import sys
-from alden_cv2_functions import get_groundtruth_labels, removeElements, match_found_to_groundtruth
+from alden_cv2_functions import get_groundtruth_labels, removeElements, match_found_to_groundtruth, generate_bin_mask
 
 #######################################
 # Section 1: Declare Globals
 #######################################
 
-TRAIN_OBJECT_SAMPLES = 1
+TRAIN_OBJECT_SAMPLES = 9
 CLASS_NAMES = ['Paintbrush', 'Spray_Sunscreen', 'Rub_Sunscreen', 'Dice_Container', 'Tape', 'Cetaphil', 'Sunglasses', 'Pillbottle', 'Fuzzy', 'Marker', 'Frisbee']
 DESCRIPTOR_FILES = []
 RES_SCALE_BIN = 0.45
 PATH_TO_TEST_JPGS = '../collection/mobi_test_jpgs'
 PATH_TO_TEST_JSON = '../collection/mobi_test_json'
-LOWE_THRESHOLD = 0.6
+LOWE_THRESHOLD = 0.45
 IGNORE_THRESHOLD = 2
 
 # Assemble List of Descriptor Files
@@ -51,16 +51,19 @@ for item in os.listdir(PATH_TO_TEST_JPGS):
     if item.endswith('.jpg'):
         # Set path to image, read it w/ opencv
         path_to_im = os.path.join(PATH_TO_TEST_JPGS, item)
-        image = cv2.imread(str(path_to_im), cv2.IMREAD_GRAYSCALE)
-        image = cv2.resize(image, (0,0), fx = RES_SCALE_BIN, fy = RES_SCALE_BIN)
+        image_color = cv2.imread(str(path_to_im))
+        image_color = cv2.resize(image_color, (0,0), fx = RES_SCALE_BIN, fy = RES_SCALE_BIN)
+        image = cv2.cvtColor(image_color, cv2.COLOR_BGR2GRAY)
+        bin_mask = generate_bin_mask(image_color)
         # Get bin kpts and descriptors using sift
-        bin_kpts, bin_desc = sift.detectAndCompute(image, None)
+        bin_kpts, bin_desc = sift.detectAndCompute(image, mask = bin_mask)
         # Get Groundtruth Labels from JSON File
         JSON_FILE = item[:-4] + '.json'
         JSON_FILEPATH = PATH_TO_TEST_JSON + os.path.sep + JSON_FILE
         groundtruth_labels = get_groundtruth_labels(JSON_FILEPATH)
         # Create List to Store Found Items In
         found_items = []
+
         #######################################
         # Section 4: Iterate through SIFT Descriptor Libraries and Perform Matching
         #######################################
@@ -85,10 +88,10 @@ for item in os.listdir(PATH_TO_TEST_JPGS):
 # Section 5: Print Precision, Recall, Save to Log
 #######################################
 
-PRECISION = round(TRUE_POSITIVES/(TRUE_POSITIVES+FALSE_POSITIVES),4)
-RECALL = round(TRUE_POSITIVES/(TRUE_POSITIVES+FALSE_NEGATIVES),4)
+PRECISION = round(TRUE_POSITIVES/(TRUE_POSITIVES+FALSE_POSITIVES+0.000001),4)
+RECALL = round(TRUE_POSITIVES/(TRUE_POSITIVES+FALSE_NEGATIVES+0.000001),4)
 
-with open('../sift_logs/final_experiment_newdesc_logs.txt', 'a') as file:
+with open('../sift_logs/final_experiment_newdesc_usingMask_logs.txt', 'a') as file:
     sys.stdout = file
     print('Training Object Samples: ' + str(TRAIN_OBJECT_SAMPLES))
     print('Ratio Test Value: ' + str(LOWE_THRESHOLD))
@@ -99,4 +102,6 @@ with open('../sift_logs/final_experiment_newdesc_logs.txt', 'a') as file:
     print('Precision: ' + str(PRECISION))
     print('Recall: ' + str(RECALL))
     print('------------------------------------------')
+
+
 

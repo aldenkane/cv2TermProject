@@ -9,6 +9,19 @@ import random
 from matplotlib import pyplot as plt
 import numpy as np
 import sys
+import torchvision as tv
+import phototour
+import torch
+from tqdm import tqdm
+import numpy as np
+import torch.nn as nn
+import math
+import tfeat_model
+import torch.optim as optim
+import torch.nn.functional as F
+import torch.backends.cudnn as cudnn
+import tfeat_utils
+from matplotlib import pyplot as plt
 from alden_cv2_functions import get_groundtruth_labels, removeElements, match_found_to_groundtruth, generate_bin_mask
 
 #######################################
@@ -33,14 +46,20 @@ DESIRED_OBJECT_CLASS = 'o5'
 OBJECT_PATH = OBJECTS_DIR_PATH + os.path.sep + DESIRED_OBJECT_CLASS
 
 #######################################
-# Section 2: Initiate SIFT and FLANN Matchers
+# Section 2: Initiate tfeat, BRISK, and FLANN Matchers
 #######################################
 
-sift = cv2.xfeatures2d.SIFT_create(contrastThreshold = 0.04, edgeThreshold = 10)
-FLANN_INDEX_KDTREE = 1
-index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
-search_params = dict(checks = 50)
-flann = cv2.FlannBasedMatcher(index_params, search_params)
+# Init Tfeat
+tfeat = tfeat_model.TNet()
+models_path = '../pretrained-models'
+net_name = 'tfeat-liberty'
+tfeat.load_state_dict(torch.load(os.path.join(models_path,net_name+".params")))
+tfeat.cuda()
+tfeat.eval()
+
+# Initiate BRISK Matcher
+brisk = cv2.BRISK_CREATE()
+bf = cv2.BFMatcher(cv2.NORM_L2)
 
 #######################################
 # Section 3: Select a Random Bin, Random Objects, Detect and Compute SIFT, Match Keypoints
@@ -70,31 +89,23 @@ for samples in range(DESIRED_OBJECT_SAMPLES):
 object_1_image = cv2.imread(str(sampled_photos[0]), cv2.IMREAD_GRAYSCALE)
 object_1_image = cv2.resize(object_1_image, (0,0), fx = RES_SCALE_OBJ, fy = RES_SCALE_OBJ)
 
-bin_kpts, bin_desc = sift.detectAndCompute(bin_image, mask = bin_mask)
-object_1_kpts, object_1_desc = sift.detectAndCompute(object_1_image, None)
+bin_kpts, bin_desc = brisk.detectAndCompute(bin_image, mask = bin_mask)
+object_1_kpts, object_1_desc = brisk.detectAndCompute(object_1_image, None)
 
-# Use flann matcher
-matches = flann.knnMatch(bin_desc, object_1_desc, k=2)
-# store all the good matches as per Lowe's ratio test.
+# Get tfeat Descriptors
+mag_factor = 3
+desc_tfeat1 = tfeat_utils.describe_opencv(tfeat, bin_image, bin_kpts, 32, mag_factor)
+desc_tfeat2 = tfeat_utils.describe_opencv(tfeat, object_1_image, object_1_kpts, 32, mag_factor)
+
+# Match tfeat descriptors
+matches = bf.knnMatch(desc_tfeat1, desc_tfeat2, k=2)
+# Apply ratio test
 good = []
 for m, n in matches:
-    if m.distance < LOWE_THRESHOLD*n.distance:
-        good.append(m)
+    if m.distance < LOWE_THRESHOLD * n.distance:
+        good.append([m])
 
-# Need to draw only good matches, so create a mask
-matchesMask = [[0,0] for i in range(len(matches))]
+img3 = cv2.drawMatchesKnn(bin_image, bin_kpts, object_1_image, object_1_kpts, good, 0, flags=2)
 
-# ratio test as per Lowe's paper
-for i,(m,n) in enumerate(matches):
-    if m.distance < LOWE_THRESHOLD*n.distance:
-        matchesMask[i]=[1,0]
-
-draw_params = dict(matchColor = (0,255,0),
-                   singlePointColor = (255,0,0),
-                   matchesMask = matchesMask,
-                   flags = 0)
-
-img3 = cv2.drawMatchesKnn(bin_image, bin_kpts, object_1_image, object_1_kpts, matches, None, **draw_params)
-
-plt.imshow(bin_mask,), plt.show()
-plt.imshow(img3,), plt.show()
+im_name = '../tfeat_logs/images/tfeat_test_' + str(sampled_photos[0])
+cv2.imwrite(str(im_name), img3)
