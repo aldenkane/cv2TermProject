@@ -37,7 +37,10 @@ img2 = cv2.imread('../imgs/v_churchill/6.ppm', 0)
 img1 = cv2.imread('../objects/T3/o2/mobi/m_Spray_Sunscreen1.jpg', 0)
 img2 = cv2.imread('../collection/mobi_test_jpgs/l2_pl2_m_side_2.jpg', 0)
 
-# Test from Bin to Bin to See if It Matches Close Keypoints
+# Test from Bin to Obj
+img2 = cv2.imread('../objects/T3/o2/mobi/m_Spray_Sunscreen1.jpg', 0)
+img1 = cv2.imread('../collection/mobi_test_jpgs/l2_pl2_m_side_2.jpg', 0)
+
 brisk = cv2.BRISK_create()
 kp1, des1 = brisk.detectAndCompute(img1, None)
 kp2, des2 = brisk.detectAndCompute(img2, None)
