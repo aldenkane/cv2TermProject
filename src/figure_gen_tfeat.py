@@ -71,7 +71,7 @@ brisk = cv2.BRISK_create()
 bin_choice = random.choice(os.listdir(PATH_TO_TEST_JPGS))
 bin_path = PATH_TO_TEST_JPGS + os.path.sep + bin_choice
 bin_image_color = cv2.imread(str(bin_path))
-bin_image_color = cv2.resize(bin_image_color, (0,0), fx = RES_SCALE_BIN, fy = RES_SCALE_BIN)
+#bin_image_color = cv2.resize(bin_image_color, (0,0), fx = RES_SCALE_BIN, fy = RES_SCALE_BIN)
 bin_image = cv2.cvtColor(bin_image_color, cv2.COLOR_BGR2GRAY)
 bin_mask = generate_bin_mask(bin_image_color)
 
@@ -89,7 +89,7 @@ for samples in range(DESIRED_OBJECT_SAMPLES):
     sampled_photos.append(picture_path)
 
 object_1_image = cv2.imread(str(sampled_photos[0]), cv2.IMREAD_GRAYSCALE)
-object_1_image = cv2.resize(object_1_image, (0,0), fx = RES_SCALE_OBJ, fy = RES_SCALE_OBJ)
+#object_1_image = cv2.resize(object_1_image, (0,0), fx = RES_SCALE_OBJ, fy = RES_SCALE_OBJ)
 
 bin_kpts, bin_desc = brisk.detectAndCompute(bin_image, mask = bin_mask)
 object_1_kpts, object_1_desc = brisk.detectAndCompute(object_1_image, None)
@@ -129,7 +129,7 @@ for m, n in matches:
     if m.distance < LOWE_THRESHOLD * n.distance:
         good.append([m])
 
-tfeat_img = cv2.drawMatchesKnn(bin_image, bin_kpts, object_1_image, object_1_kpts, good, 0, flags=2)
+tfeat_img = cv2.drawMatchesKnn(object_1_image, object_1_kpts, bin_image, bin_kpts, good, 0, flags=2)
 
 im_name = '../tfeat_logs/images/tfeat_figure_gen_cnn_' + str(append) + '.jpg'
 cv2.imwrite(str(im_name), tfeat_img)
