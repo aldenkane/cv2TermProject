@@ -47,12 +47,12 @@ matches = bf.knnMatch(des1, des2, k=2)
 # Apply ratio test
 good = []
 for m, n in matches:
-    if m.distance < 0.8 * n.distance:
+    if m.distance < 0.7 * n.distance:
         good.append([m])
 
 img_brisk = cv2.drawMatchesKnn(img1, kp1, img2, kp2, good, 0, flags=2)
 plt.imshow(img_brisk), plt.show()
-im_brisk_filename = '../tfeat_logs/images/tfeat_simple_brisk_' + str(append) + '.jpg'
+im_brisk_filename = '../tfeat_logs/images/tfeat_simple_brisk_lowe_0.7' + str(append) + '.jpg'
 cv2.imwrite(str(im_brisk_filename), img_brisk)
 
 # mag_factor is how many times the original keypoint scale
@@ -66,13 +66,13 @@ matches = bf.knnMatch(desc_tfeat1, desc_tfeat2, k=2)
 # Apply ratio test
 good = []
 for m, n in matches:
-    if m.distance < 0.8 * n.distance:
+    if m.distance < 0.7 * n.distance:
         good.append([m])
 
 img_tfeat = cv2.drawMatchesKnn(img1, kp1, img2, kp2, good, 0, flags=2)
 
 plt.imshow(img_tfeat), plt.show()
-im_tfeat_filename = '../tfeat_logs/images/tfeat_simple_cnn_' + str(append) + '.jpg'
+im_tfeat_filename = '../tfeat_logs/images/tfeat_simple_cnn_lowe0.7' + str(append) + '.jpg'
 cv2.imwrite(str(im_tfeat_filename), img_tfeat)
 
 print('Finished Program!')
