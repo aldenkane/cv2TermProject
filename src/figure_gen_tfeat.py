@@ -58,7 +58,7 @@ tfeat.cuda()
 tfeat.eval()
 
 # Initiate BRISK Matcher
-brisk = cv2.BRISK_CREATE()
+brisk = cv2.BRISK_create()
 bf = cv2.BFMatcher(cv2.NORM_L2)
 
 #######################################
