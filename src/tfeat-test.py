@@ -50,7 +50,7 @@ matches = bf.knnMatch(des1, des2, k=2)
 # Apply ratio test
 good = []
 for m, n in matches:
-    if m.distance < 0.7 * n.distance:
+    if m.distance < 0.8 * n.distance:
         good.append([m])
 
 img_brisk = cv2.drawMatchesKnn(img1, kp1, img2, kp2, good, 0, flags=2)
@@ -69,7 +69,7 @@ matches = bf.knnMatch(desc_tfeat1, desc_tfeat2, k=2)
 # Apply ratio test
 good = []
 for m, n in matches:
-    if m.distance < 0.7 * n.distance:
+    if m.distance < 0.8 * n.distance:
         good.append([m])
 
 img_tfeat = cv2.drawMatchesKnn(img1, kp1, img2, kp2, good, 0, flags=2)
