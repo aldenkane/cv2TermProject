@@ -1,0 +1,7 @@
+False Positive --> Matched: (c_Tape10.jpg, c_Paintbrush9.jpg)
+False Positive --> Matched: (c_Tape10.jpg, m_Spray_Sunscreen1.jpg)
+False Positive --> Matched: (c_Tape10.jpg, c_Dice_Container3.jpg)
+True Positive --> Matched: (c_Tape10.jpg, c_Tape4.jpg)
+False Positive --> Matched: (c_Tape10.jpg, c_Spray_Sunscreen3.jpg)
+False Positive --> Matched: (c_Tape10.jpg, c_Sunglasses9.jpg)
+True Positive --> Matched: (c_Tape10.jpg, c_Tape10.jpg)

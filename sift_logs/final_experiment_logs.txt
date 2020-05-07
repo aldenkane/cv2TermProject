@@ -1,0 +1,65 @@
+RES_SCALE_OBJECT = 0.2
+RES_SCALE_BIN = 0.45
+FREQ = 0.6
+
+------------------------------------------
+Training Object Samples: 1
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+Precision: 0.6825
+Recall: 0.6334
+------------------------------------------
+Training Object Samples: 3
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+Precision: 0.6841
+Recall: 0.6984
+------------------------------------------
+Training Object Samples: 5
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+Precision: 0.7208
+Recall: 0.6589
+------------------------------------------
+Training Object Samples: 7
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+Precision: 0.7021
+Recall: 0.5522
+------------------------------------------
+Training Object Samples: 9
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+Precision: 0.7073
+Recall: 0.6334
+------------------------------------------
+Training Object Samples: 1
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+Precision: 0.8571
+Recall: 0.2367
+------------------------------------------
+Training Object Samples: 3
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+Precision: 0.6381
+Recall: 0.1555
+------------------------------------------
+Training Object Samples: 5
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+Precision: 0.8108
+Recall: 0.1392
+------------------------------------------
+Training Object Samples: 7
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+Precision: 0.7955
+Recall: 0.0812
+------------------------------------------
+Training Object Samples: 9
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+Precision: 0.8208
+Recall: 0.2019
+------------------------------------------
