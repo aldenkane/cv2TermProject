@@ -14,10 +14,3 @@ I was motivated to attempt solutions that did not require deep learning for obje
 As this project presented object detection in a constrained environment (i.e. bin of known size and color), using this information to occlude background noise (e.g. floor around bin, carpet, edges of the bin) is a practical means of removing spurious detections. I achieved this by segmenting the image for all 'H' values in the HSV color space within a range of [50,76]. The function `generate_bin_mask(img)` in `alden_cv2_functions.py`. It takes an RGB image as an argument, and returns a 1-channel mask for the bin.
 
 ![Figure 1. Generated Masks for Totes](/report_images/masks.png)
-
- 
-## Instructions for Running Programs
-
-## Consent for Amazon Robotics
-
-## Division of Work
