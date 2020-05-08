@@ -26,7 +26,7 @@ To address this we did the following experiments:
 1. As a baseline, we looked at a random sample of tagged bin data and how well the system performed if we only used tagged bin data with a random 80/20 split. We found that this gave up the best performance with an IOU of 68.8% overall. 
   a. Run the following to see examples: head data/valid_totes.txt | ./darknet cfg/yolov3_totes.cfg backup/yolov3_totes_final.weights
   b. For the average IOU run python get_iou.py results/totes/!
-[Figure 3. Training on all bin images](/report_images/totes.png)
+![Figure 3. Training on all bin images](/report_images/totes.png)
   
 2. We resized the images of the individual objects and added padding around it so that it would be proportionally similar to what we expect to see in the bin photos. We tried padding it with white pixels similar to the background and combined it with our bin data. Again we do a random 80/20 split and we get an average IOU of 24.5%
   a. Run the following to see examples: head data/valid_white.txt | ./darknet cfg/yolov3_resize_white.cfg backup/yolov3_resize_white_final.weights
