@@ -45,6 +45,7 @@ I ran experiments that performed SIFT descriptor matching for 1, 3, 5, 7, and 9 
 |5 | 12.10 |77 | 26 | 354 | 74.76 |17.87|
 |7 | 13.51 |100 | 38 | 331 | 72.46 | 23.20|
 |9 | 16.17 |119 | 54 | 312 | 68.79 | 27.61|
+
 **Table 1.** SIFT Matching Results w/ Lowe's Ratio Test @ 0.6
 
 |Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)|
@@ -54,6 +55,7 @@ I ran experiments that performed SIFT descriptor matching for 1, 3, 5, 7, and 9 
 |5 | 12.21 | 253 | 154 | 178 | 62.16 | 58.70|
 |7 | 13.89 | 306 | 181 | 125 | 62.83 | 71.00|
 |9 | 17.26 | 348 | 199 | 83 | 63.62 | 80.74|
+
 **Table 2.** SIFT Matching Results w/ Lowe's Ratio Test @ 0.7
 
 **CNN-Based Keypoint Descriptor Matching**
@@ -73,6 +75,7 @@ An example usage of this is shown below, with a BRISK keypoint detector initiall
 |5 | 47.97 | 7 | 1 | 424 | 87.50 | 1.62|
 |7 | 56.75 | 6 | 1 | 425 | 85.71 | 1.39|
 |9 | 70.89 | 8 | 3 | 423 | 72.73 | 1.86|
+
 **Table 3.** tfeat Matching Results w/ Lowe's Ratio Test @ 0.6
 
 |Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)|
@@ -82,6 +85,7 @@ An example usage of this is shown below, with a BRISK keypoint detector initiall
 |5 | 47.43 | 67 | 13 | 364 | 83.75 | 15.55|
 |7 | 56.29 | 83 | 17 | 348 | 83.00 | 19.26|
 |9 | 77.26 | 112 | 26 | 319 | 81.12 | 25.99|
+
 **Table 4.** tfeat Matching Results w/ Lowe's Ratio Test @ 0.7
 
 
