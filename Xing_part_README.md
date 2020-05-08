@@ -13,9 +13,14 @@ For yolo transfer learning go into folder darknet_new. The requirements are the 
 From our preliminary results, we found that our raw tagged object data was not enough for the system to learn the correct tagging of clustered objects. To run an example of this run the following:
 head data/datasets/valid_obj_green.txt | ./darknet cfg/yolov3_objects_only.cfg backup/yolov3_objects_only_final.weights
 
+![Figure 1. Training on objects only](/report_images/masks.png)
+
 We also combined the individual object pictures with the tagged bin pictures the results can be seen by run the following:
 head data/valid_totes.txt | ./darknet cfg/yolov3_set_aside.cfg backup/yolov3_set_aside_2000.weights
 We see that this models is able to tag some of the pictures but is proned to tag the whole bin as frisbee. This lead us to believe that the size of the individual images were too big. Since the neural network is used to seeing the Fribee take up the entire frame it is prone to tag the entire frame as on big frisbee.
+
+
+![Figure 2. Training on all images](/report_images/masks.png)
 
 To address this we did the following experiments:
 1. As a baseline, we looked at a random sample of tagged bin data and how well the system performed if we only used tagged bin data with a random 80/20 split. We found that this gave up the best performance with an IOU of 68.8% overall. 
