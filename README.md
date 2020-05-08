@@ -38,22 +38,22 @@ I had early challenges with the knn matcher – I was matching the bin descripto
 I ran experiments that performed SIFT descriptor matching for 1, 3, 5, 7, and 9 training object images to the bin descriptors generated for an image, and did so for Lowe's Ratio Test values of 0.6 and 0.7. The results are detailed in Table 1.
 
 **SIFT Experimental Results**
-# Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)
------------ | ------------- |------------- | ----------- | ------------- | ----------- | -------------
-1 | 9.47 | 20 | 4 | 411 | 83.33 | 4.64
-3 | 12.27 |63 | 15 | 368 | 80.77 | 14.62
-5 | 12.10 |77 | 26 | 354 | 74.76 |17.87
-7 | 13.51 |100 | 38 | 331 | 72.46 | 23.20
-9 | 16.17 |119 | 54 | 312 | 68.79 | 27.61
+|Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)|
+|----------- | ------------- |------------- | ----------- | ------------- | ----------- | -------------|
+|1 | 9.47 | 20 | 4 | 411 | 83.33 | 4.64|
+|3 | 12.27 |63 | 15 | 368 | 80.77 | 14.62|
+|5 | 12.10 |77 | 26 | 354 | 74.76 |17.87|
+|7 | 13.51 |100 | 38 | 331 | 72.46 | 23.20|
+|9 | 16.17 |119 | 54 | 312 | 68.79 | 27.61|
 **Table 1.** SIFT Matching Results w/ Lowe's Ratio Test @ 0.6
 
-# Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)
------------ | ------------- |------------- | ----------- | ------------- | ----------- | -------------
-1 | 9.95 | 71 | 27 | 360 | 72.45 | 16.47
-3 | 12.85 | 221 | 121 | 210 | 64.62 | 51.28
-5 | 12.21 | 253 | 154 | 178 | 62.16 | 58.70
-7 | 13.89 | 306 | 181 | 125 | 62.83 | 71.00
-9 | 17.26 | 348 | 199 | 83 | 63.62 | 80.74
+|Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)|
+|----------- | ------------- |------------- | ----------- | ------------- | ----------- | -------------|
+|1 | 9.95 | 71 | 27 | 360 | 72.45 | 16.47|
+|3 | 12.85 | 221 | 121 | 210 | 64.62 | 51.28|
+|5 | 12.21 | 253 | 154 | 178 | 62.16 | 58.70|
+|7 | 13.89 | 306 | 181 | 125 | 62.83 | 71.00|
+|9 | 17.26 | 348 | 199 | 83 | 63.62 | 80.74|
 **Table 2.** SIFT Matching Results w/ Lowe's Ratio Test @ 0.7
 
 **CNN-Based Keypoint Descriptor Matching**
@@ -63,26 +63,26 @@ Using this, I generated descriptor libraries (housed in `tfeat_descriptor_librar
 
 An example usage of this is shown below, with a BRISK keypoint detector initially detecting and matching keypoints, then the tfeat network creating and matching new descriptors around those keypoints:
 
-![tfeat Example](report_images/tfeat)
+![tfeat Example](report_images/tfeat.png)
 
 **tfeat Experimental Results**
-# Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)| Recall (%)
------------ | ------------- |------------- | ----------- | ------------- | ----------- | -------------
-1 | 33.59 | 1 | 0 | 430 | 100.00 | 0.23
-3 | 37.84 | 1 | 1 | 430 | 50.00 | 0.23
-5 | 47.97 | 7 | 1 | 424 | 87.50 | 1.62
-7 | 56.75 | 6 | 1 | 425 | 85.71 | 1.39
-9 | 70.89 | 8 | 3 | 423 | 72.73 | 1.86
-**Table 1.** tfeat Matching Results w/ Lowe's Ratio Test @ 0.6
+|Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)| Recall (%)|
+|----------- | ------------- |------------- | ----------- | ------------- | ----------- | -------------|
+|1 | 33.59 | 1 | 0 | 430 | 100.00 | 0.23|
+|3 | 37.84 | 1 | 1 | 430 | 50.00 | 0.23|
+|5 | 47.97 | 7 | 1 | 424 | 87.50 | 1.62|
+|7 | 56.75 | 6 | 1 | 425 | 85.71 | 1.39|
+|9 | 70.89 | 8 | 3 | 423 | 72.73 | 1.86|
+**Table 3.** tfeat Matching Results w/ Lowe's Ratio Test @ 0.6
 
-# Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)
------------ | ------------- |------------- | ----------- | ------------- | ----------- | -------------
-1 | 32.00 | 28 | 3 | 403 | 90.32 | 6.50
-3 | 37.26 | 30 | 5 | 401 | 85.71 | 6.96
-5 | 47.43 | 67 | 13 | 364 | 83.75 | 15.55
-7 | 56.29 | 83 | 17 | 348 | 83.00 | 19.26
-9 | 77.26 | 112 | 26 | 319 | 81.12 | 25.99
-**Table 2.** tfeat Matching Results w/ Lowe's Ratio Test @ 0.7
+|Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)|
+|----------- | ------------- |------------- | ----------- | ------------- | ----------- | -------------|
+|1 | 32.00 | 28 | 3 | 403 | 90.32 | 6.50|
+|3 | 37.26 | 30 | 5 | 401 | 85.71 | 6.96|
+|5 | 47.43 | 67 | 13 | 364 | 83.75 | 15.55|
+|7 | 56.29 | 83 | 17 | 348 | 83.00 | 19.26|
+|9 | 77.26 | 112 | 26 | 319 | 81.12 | 25.99|
+**Table 4.** tfeat Matching Results w/ Lowe's Ratio Test @ 0.7
 
 
 
