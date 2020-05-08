@@ -4,8 +4,24 @@ l2b_sift_experiment.py# l2b_sift_experiment.py
 #   Author: Alden Kane
 
 import cv2 as cv2
-import os
 import numpy as np
+import os
+import random
+import torchvision as tv
+import phototour
+import torch
+from tqdm import tqdm
+import numpy as np
+import torch.nn as nn
+import math
+import tfeat_model
+import torch.optim as optim
+import torch.nn.functional as F
+import torch.backends.cudnn as cudnn
+import tfeat_utils
+import numpy as np
+import cv2
+from matplotlib import pyplot as plt
 import sys
 import time
 from alden_cv2_functions import get_groundtruth_labels, removeElements, match_found_to_groundtruth, generate_bin_mask
@@ -28,7 +44,7 @@ IGNORE_THRESHOLD = 2
 
 # Assemble List of Descriptor Files
 for i, obj in enumerate(CLASS_NAMES):
-    file_to_load = '../sift_descriptor_library/' + str(TRAIN_OBJECT_SAMPLES) + os.path.sep + str(TRAIN_OBJECT_SAMPLES) + '_' + str(CLASS_NAMES[i]) + '_' + 'SIFT_DESC.npy'
+    file_to_load = '../tfeat_descriptor_library/' + str(TRAIN_OBJECT_SAMPLES) + os.path.sep + str(TRAIN_OBJECT_SAMPLES) + '_' + str(CLASS_NAMES[i]) + '_' + 'TFEAT_DESC.npy'
     DESCRIPTOR_FILES.append(file_to_load)
 
 # Globals for Experimental Analysis
@@ -37,10 +53,18 @@ FALSE_POSITIVES = 0
 FALSE_NEGATIVES = 0
 
 #######################################
-# Section 2: Initiate SIFT and FLANN Matchers
+# Section 2: Initiate TFEAT and Matchers
 #######################################
 
-sift = cv2.xfeatures2d.SIFT_create(contrastThreshold = 0.06, edgeThreshold = 10)
+# Initiate tfeat and BRISK
+tfeat = tfeat_model.TNet()
+models_path = '../pretrained-models'
+net_name = 'tfeat-liberty'
+mag_factor = 3
+tfeat.load_state_dict(torch.load(os.path.join(models_path,net_name+".params")))
+tfeat.cuda()
+tfeat.eval()
+brisk = cv2.BRISK_create()
 FLANN_INDEX_KDTREE = 1
 index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
 search_params = dict(checks = 50)
@@ -59,8 +83,10 @@ for item in os.listdir(PATH_TO_TEST_JPGS):
         image_color = cv2.resize(image_color, (0,0), fx = RES_SCALE_BIN, fy = RES_SCALE_BIN)
         image = cv2.cvtColor(image_color, cv2.COLOR_BGR2GRAY)
         bin_mask = generate_bin_mask(image_color)
-        # Get bin kpts and descriptors using sift
-        bin_kpts, bin_desc = sift.detectAndCompute(image, mask = bin_mask)
+        # Get bin kpts and descriptors using brisk
+        bin_kpts, bin_desc = brisk.detectAndCompute(image, mask = bin_mask)
+        # Describe bin key pts using tfeat
+        bin_desc_tfeat = tfeat_utils.describe_opencv(tfeat, image, bin_kpts, 32, mag_factor)
         # Get Groundtruth Labels from JSON File
         JSON_FILE = item[:-4] + '.json'
         JSON_FILEPATH = PATH_TO_TEST_JSON + os.path.sep + JSON_FILE
@@ -73,7 +99,7 @@ for item in os.listdir(PATH_TO_TEST_JPGS):
         ##33#####################################
         for i,lib in enumerate(DESCRIPTOR_FILES):
             obj_desc = np.load(str(DESCRIPTOR_FILES[i]))
-            matches = flann.knnMatch(obj_desc, bin_desc, k=2)
+            matches = flann.knnMatch(obj_desc, bin_desc_tfeat, k=2)
             # store all the good matches as per Lowe's ratio test.
             for m, n in matches:
                 if m.distance < LOWE_THRESHOLD * n.distance:
@@ -96,7 +122,7 @@ PRECISION = round(TRUE_POSITIVES/(TRUE_POSITIVES+FALSE_POSITIVES+0.000001),4)
 RECALL = round(TRUE_POSITIVES/(TRUE_POSITIVES+FALSE_NEGATIVES+0.000001),4)
 TIME = (time.time() - start_time)
 
-with open('../sift_logs/final_experiment_newdesc_usingMask__TIME_logs.txt', 'a') as file:
+with open('../tfeat_logs/final_experiment_newdesc_usingMask__TIME_logs.txt', 'a') as file:
     sys.stdout = file
     print('OBJ --> BIN')
     print('Training Object Samples: ' + str(TRAIN_OBJECT_SAMPLES))
