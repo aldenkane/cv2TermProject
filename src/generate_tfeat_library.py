@@ -41,7 +41,7 @@ DESIRED_SAMPLE = 'mobi'
 
 # Resize Scale, Images Sampled
 RES_SCALE_OBJECT = 0.2
-N_IMAGES_SAMPLED = 1
+N_IMAGES_SAMPLED = 9
 
 # Initiate tfeat and BRISK
 tfeat = tfeat_model.TNet()
