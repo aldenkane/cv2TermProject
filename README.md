@@ -92,3 +92,12 @@ An example usage of this is shown below, with a BRISK keypoint detector initiall
 
 
 
+For yolo transfer learning go into folder darknet_new. The requirements are the same as those in pratical 7. To see the popup of the tagged pictures on crc gpu machines: 
+1. Log into crc via ssh username@crcfe02.crc.nd.edu.
+2. Open and interactive session via qsh -q gpu -l gpu=1. 
+3. Set gpu to an available gpu via setenv CUDA_VISIBLE_DEVICES $SGE_HGR_gpu_card
+4. Load cuda and opencv vi module load cuda/10.0 opencv
+5. unzip the folder 
+
+
+
