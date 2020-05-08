@@ -56,5 +56,5 @@ a. head data/datasets/valid_c615.txt | ./darknet cfg/c615.cfg backup/c615_final.
 a. head data/datasets/valid_c615_green.txt | ./darknet cfg/c615_green.cfg backup/c615_green_final.weights for resized images with green pixel paddings. To get IOU run python get_iou.py results/c615_green/ we get 7.84%
 
 The results of test can be seen by running head data/test.txt in any of the above situations in place of the command for looking at validation data. For almost all of these systems none gave us false positives. The exceptions are experiment 3 which mistook part of a blue bin for the frisbee.
-
+![Figure 5. Mistaken frisbee from experiment 3](/report_images/resize_green_mistake.png)   
 From these experiments it seem that individual objects alone are not enough for the system to recognize it in the wild. We definitely need some number of in context data. With that it is also very important scale the individual objects such that they aren't disportionally larger than what we expect to see in context. Lastly certain changes are easy for the system to compensate for. For example, going from higher resolution to lower resolution is much easier than the other way around, and varying angles are very hard for the system to recognize. 
