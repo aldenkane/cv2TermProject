@@ -31,20 +31,23 @@ CNN-based keypoint descriptors are good inasmuch as once descriptors are generat
 An example usage of this is shown below, with a BRISK keypoint detector initially detecting and matching keypoints, then the tfeat network creating and matching new descriptors around those keypoints:
 
 ![tfeat Example](report_images/tfeat.png)
+**Figure 2.** Example tfeat Usage
 
 ## (b) Experiments Conducted
 
+### Alden's Keypoint-Based Approach
+
 Early experiments with SIFT showed that it is prone to spurious matches, as seen in Figure 2.
 
-![Figure 2. Spurious Matches w/ SIFT](/report_images/spurious.png)
-**Figure 2.** Spurious Matches w/ SIFT
+![Spurious Matches w/ SIFT](/report_images/spurious.png)
+**Figure 3.** Spurious Matches w/ SIFT
 
 To combat spurious matches, I qualitatively experimented with the frequency of the DoG detector. I lowered the frequency of the detector by setting the contrast threshold to 0.06, as opposed to Lowe's stock value of 0.04, which aided in removing spurious matches to the carpet and other objects. Using openCV 3.2.2.16, this is implemented as `sift = cv2.xfeatures2d.SIFT_create(contrastThreshold = 0.06, edgeThreshold = 10)`
 
 With the previously described masking procedure for bins and a lower frequency keypoint detector, I had a better SIFT implementation for this challenge. Figure 3 shows fewer keypoints in a well-cropped image, with a lack of keypoints outside the bin from the mask.
 
 ![Good Sift Detector](/report_images/nice_frisbee.png)
-**Figure 3.** SIFT Matcher Working Well due w/ Lower Frequency Detector, No Keypoints Outside Bin from Mask
+**Figure 4.** SIFT Matcher Working Well due w/ Lower Frequency Detector, No Keypoints Outside Bin from Mask
 
 I generated a library of SIFT descriptors for the 11 classes in our dataset (`['Paintbrush', 'Spray_Sunscreen', 'Rub_Sunscreen', 'Dice_Container', 'Tape', 'Cetaphil', 'Sunglasses', 'Pillbottle', 'Fuzzy', 'Marker', 'Frisbee']`) by randomly sampling 1, 3, 5, 7, and 9 distinct mobile images containing only the object of interest, generated SIFT descriptors for them, and then appended the descriptors together in `.npy` files. These are housed in `sift_descriptor_library`. This allowed me to experiment with the amount of training data needed to get reasonable accuracy for SIFT matching. Descriptor files with fewer training images have less information from different orientations of the objects of interest.
 
@@ -102,8 +105,9 @@ In examining convolutional feature descriptors, I generated descriptor libraries
 
 **Table 4.** tfeat Matching Results w/ Lowe's Ratio Test @ 0.7
 
-### Alden's Keypoint-Based Approach
-
-## (c) Experiments Conducted
+## (c) Detection Accuracy
 
 ### Alden's Keypoint-Based Approach
+
+My experiments used no bin images for training, so I am reporting accuracy metrics run on test sets that include all mobile bin images. I used precision and recall to quantify accuracy, as these are common in pattern recognition were suitable for the method by which I was determining true and false positives. A "true positive" occurred if the object's descriptor file was matched to the descriptors from the bin and the object was present in the ground truth label files, a false positive if the object's descriptor file was matched and the object wasn't present in the ground truth labels for the bin, and a false negative if the objects descriptor file wasn't matched, but was present in the ground truth labels for the bin.  **Note:** this method of determining true positives can still admit to spurious matches, i.e. if an object (say Spray_Sunscreen) was matched to a bin and present in the corresponding ground truth labels file, I did not perform a check to ensure that the matched keypoint corresponded to the bounding box from this object (e.g. the bin keypoint it was matched to could have been the frisbee). The true precision and recall of my experiments is likely lower than report in Tables 1 - 5.
+
