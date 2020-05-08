@@ -25,4 +25,22 @@ To address this we did the following experiments:
   a. Run the following to see examples: head data/valid_2.txt | ./darknet cfg/yolov3_resize.cfg backup/yolov3_resize_final.weights
   b. For the average IOU run python get_iou.py results/resize_green/
   
-  
+To further understand what the neural network is capable of learning from what it can't we divide the bin data based on features of the lighting, angle, and sensor. This is so we can see what has a greater effect on the models abiliy to learn.
+
+4. Ligthing: for this experiment we include resized images along with all bin images taken under al1 lighting conditions. The validation set is thus all the images taken under the other lighting conditions. This we found was challenging for the system to learn because there was only 1/3 of all bin data in training and two different lighting conditions to test for. 
+a. head data/datasets/valid_al1.txt | ./darknet cfg/al1_lighting.cfg backup/al1_lighting_final.weights for resized images with white pixel paddings. To get IOU run python get_iou.py results/al1/ we get 4.6%
+b. head data/datasets/valid_al1_green.txt | ./darknet cfg/al1_lighting.cfg backup/al1_lighting_final.weights for resized images with green pixel paddings. To get IOU run python get_iou.py results/al1_green/ we get 8.5%
+
+5. Angle: for this experiment all top view pictures were added and side view pictures became validation data. We found that this was the hardest condition to learn for the system.
+a. head data/datasets/valid_top.txt | ./darknet cfg/top_view_only.cfg backup/top_view_only_final.weights for resized images with white pixel paddings. To get IOU run python get_iou.py results/top_view/ we get 3.8%
+a. head data/datasets/valid_top_green.txt | ./darknet cfg/top_view_green.cfg backup/top_view_green_final.weights for resized images with green pixel paddings. To get IOU run python get_iou.py results/top_green/ we get 4.8%
+
+6. High Resolution Senors: for this experiment all pictures taken by our mobi were added and all the webcam pictures became validation data. We found that this was the easiest condition to learn for the system.
+a. head data/datasets/valid_mobi.txt | ./darknet cfg/mobi.cfg backup/mobi_final.weights for resized images with white pixel paddings. To get IOU run python get_iou.py results/mobi/ we get 13.47%
+a. head data/datasets/valid_mobi_green.txt | ./darknet cfg/mobi_green.cfg backup/mobi_green_final.weights for resized images with green pixel paddings. To get IOU run python get_iou.py results/mobi_green/ we get 13.97%
+
+7. High Resolution Senors: for this experiment all pictures taken by our mobi were added and all the webcam pictures became validation data. We found that this was the easiest condition to learn for the system.
+a. head data/datasets/valid_c615.txt | ./darknet cfg/c615.cfg backup/c615_final.weights for resized images with white pixel paddings. To get IOU run python get_iou.py results/c615/ we get 5.45%
+a. head data/datasets/valid_c615_green.txt | ./darknet cfg/c615_green.cfg backup/c615_green_final.weights for resized images with green pixel paddings. To get IOU run python get_iou.py results/c615_green/ we get 7.84%
+
+The results of test can be seen by running head data/test.txt in any of the above situations in place of the command for looking at validation data. For almost all of these systems none gave us false positives. The exceptions are experiment 3 which mistook part of a blue bin for the frisbee.
