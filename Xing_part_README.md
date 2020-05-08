@@ -9,10 +9,14 @@ For yolo transfer learning go into folder darknet_new. The requirements are the 
 2. Open and interactive session via qsh -q gpu -l gpu=1.
 3. Set gpu to an available gpu via setenv CUDA_VISIBLE_DEVICES $SGE_HGR_gpu_card
 4. Load cuda and opencv vi module load cuda/10.0 opencv
-5. unzip the folder
+5. Unzip the folder as long as your running on gpu this should work.
 
 From our preliminary results, we found that our raw tagged object data was not enough for the system to learn the correct tagging of clustered objects. To run an example of this run the following:
 head data/datasets/valid_obj_green.txt | ./darknet cfg/yolov3_objects_only.cfg backup/yolov3_objects_only_final.weights
+
+We also combined the individual object pictures with the tagged bin pictures the results can be seen by run the following:
+head data/valid_totes.txt | ./darknet cfg/yolov3_set_aside.cfg backup/yolov3_set_aside_2000.weights
+We see that this models is able to tag some of the pictures but is proned to tag the whole bin as frisbee. This lead us to believe that the size of the individual images were too big. Since the neural network is used to seeing the Fribee take up the entire frame it is prone to tag the entire frame as on big frisbee.
 
 To address this we did the following experiments:
 1. As a baseline, we looked at a random sample of tagged bin data and how well the system performed if we only used tagged bin data with a random 80/20 split. We found that this gave up the best performance with an IOU of 68.8% overall. 
@@ -44,3 +48,5 @@ a. head data/datasets/valid_c615.txt | ./darknet cfg/c615.cfg backup/c615_final.
 a. head data/datasets/valid_c615_green.txt | ./darknet cfg/c615_green.cfg backup/c615_green_final.weights for resized images with green pixel paddings. To get IOU run python get_iou.py results/c615_green/ we get 7.84%
 
 The results of test can be seen by running head data/test.txt in any of the above situations in place of the command for looking at validation data. For almost all of these systems none gave us false positives. The exceptions are experiment 3 which mistook part of a blue bin for the frisbee.
+
+From these experiments it seem that individual objects alone are not enough for the system to recognize it in the wild. We definitely need some number of in context data. With that it is also very important scale the individual objects such that they aren't disportionally larger than what we expect to see in context. Lastly certain changes are easy for the system to compensate for. For example, going from higher resolution to lower resolution is much easier than the other way around, and varying angles are very hard for the system to recognize. 
