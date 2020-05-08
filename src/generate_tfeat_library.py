@@ -47,9 +47,11 @@ N_IMAGES_SAMPLED = 1
 tfeat = tfeat_model.TNet()
 models_path = '../pretrained-models'
 net_name = 'tfeat-liberty'
+mag_factor = 3
 tfeat.load_state_dict(torch.load(os.path.join(models_path,net_name+".params")))
 tfeat.cuda()
 tfeat.eval()
+brisk = cv2.BRISK_create()
 
 # Globals for Iterating Through Objects Folders
 CURRENT_ITEM = 0
@@ -63,7 +65,7 @@ for folder in OBJECTS_FOLDERS:
     # Maintain list of sampled photos that resets for each class
     sampled_photos = []
     # Create a name for numpy descriptor array
-    descriptor_filepath_to_save = '../tfeat_descriptor_library/' + str(N_IMAGES_SAMPLED) + os.path.sep + str(N_IMAGES_SAMPLED) + '_' + CLASS_NAMES[CURRENT_ITEM] + '_SIFT_DESC.npy'
+    descriptor_filepath_to_save = '../tfeat_descriptor_library/' + str(N_IMAGES_SAMPLED) + os.path.sep + str(N_IMAGES_SAMPLED) + '_' + CLASS_NAMES[CURRENT_ITEM] + '_TFEAT_DESC.npy'
     # Create Array to Save
     array_to_save = np.empty((0,128), dtype=np.float32)
 
@@ -83,14 +85,11 @@ for folder in OBJECTS_FOLDERS:
 
         # Rescale
         img = cv2.resize(img, (0,0), fx = RES_SCALE_OBJECT, fy = RES_SCALE_OBJECT)
-        key_pts, descriptors = .detectAndCompute(img, None)
+        key_pts, descriptors = brisk.detectAndCompute(img, None)
+        desc_tfeat = tfeat_utils.describe_opencv(tfeat, img, key_pts, 32, mag_factor)
 
         # Append Array to Itself for Saving
-        array_to_save = np.vstack((array_to_save, descriptors))
-
-        # Optional: Display Images
-        # img = cv2.drawKeypoints(img, key_pts, img, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        # plt.imshow(img,), plt.show()
+        array_to_save = np.vstack((array_to_save, desc_tfeat))
 
     # Save Array after Getting Desired Number of Images
     print(CLASS_NAMES[CURRENT_ITEM])

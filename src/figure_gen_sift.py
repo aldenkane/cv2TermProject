@@ -29,7 +29,7 @@ DESIRED_SAMPLE = 'mobi'
 
 
 # See if o1, o2, o3
-DESIRED_OBJECT_CLASS = 'o9'
+DESIRED_OBJECT_CLASS = 'o1'
 OBJECT_PATH = OBJECTS_DIR_PATH + os.path.sep + DESIRED_OBJECT_CLASS
 
 #######################################
