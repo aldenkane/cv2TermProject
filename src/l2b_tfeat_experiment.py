@@ -1,4 +1,4 @@
-l2b_sift_experiment.py# l2b_sift_experiment.py
+# l2b_tfeat_experiment.py
 # Takes library of SIFT descriptors by loading numpy arrays and matches them to bin images
 # Notre Dame Computer Vision 2 Term Project
 #   Author: Alden Kane
