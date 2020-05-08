@@ -16,7 +16,13 @@ head data/datasets/valid_obj_green.txt | ./darknet cfg/yolov3_objects_only.cfg b
 
 To address this we did the following experiments:
 1. As a baseline, we looked at a random sample of tagged bin data and how well the system performed if we only used tagged bin data with a random 80/20 split. We found that this gave up the best performance with an IOU of 68.8% overall. 
-a. Run the following to see examples: head data/valid_totes.txt | ./darknet cfg/yolov3_totes.cfg backup/yolov3_totes_final.weights
-b. For the average IOU run python get_iou.py results/totes/
+  a. Run the following to see examples: head data/valid_totes.txt | ./darknet cfg/yolov3_totes.cfg backup/yolov3_totes_final.weights
+  b. For the average IOU run python get_iou.py results/totes/
 2. We resized the images of the individual objects and added padding around it so that it would be proportionally similar to what we expect to see in the bin photos. We tried padding it with white pixels similar to the background and combined it with our bin data. Again we do a random 80/20 split and we get an average IOU of 24.5%
+  a. Run the following to see examples: head data/valid_white.txt | ./darknet cfg/yolov3_resize_white.cfg backup/yolov3_resize_white_final.weights
+  b. For the average IOU run python get_iou.py results/resize_white/
 3. We resized those same images but pad with green pixels since our objects are in the green plastic tote. Doing the same thing as in experiment 2 we get an average IOU of 47.42% The improvement here could be due to overfitting so we use both data in further experiments.
+  a. Run the following to see examples: head data/valid_2.txt | ./darknet cfg/yolov3_resize.cfg backup/yolov3_resize_final.weights
+  b. For the average IOU run python get_iou.py results/resize_green/
+  
+  
