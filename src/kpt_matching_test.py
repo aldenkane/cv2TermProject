@@ -23,10 +23,13 @@ import torch.backends.cudnn as cudnn
 import tfeat_utils
 import numpy as np
 import cv2
+import matplotlib
 from matplotlib import pyplot as plt
 import sys
 import time
 from alden_cv2_functions import get_groundtruth_labels, removeElements, match_found_to_groundtruth, generate_bin_mask
+
+matplotlib.use('tkagg')
 
 #######################################
 # Section 1: Declare Globals
