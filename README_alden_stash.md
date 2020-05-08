@@ -111,3 +111,29 @@ In examining convolutional feature descriptors, I generated descriptor libraries
 
 My experiments used no bin images for training, so I am reporting accuracy metrics run on test sets that include all mobile bin images. I used precision and recall to quantify accuracy, as these are common in pattern recognition were suitable for the method by which I was determining true and false positives. A "true positive" occurred if the object's descriptor file was matched to the descriptors from the bin and the object was present in the ground truth label files, a false positive if the object's descriptor file was matched and the object wasn't present in the ground truth labels for the bin, and a false negative if the objects descriptor file wasn't matched, but was present in the ground truth labels for the bin.  **Note:** this method of determining true positives can still admit to spurious matches, i.e. if an object (say Spray_Sunscreen) was matched to a bin and present in the corresponding ground truth labels file, I did not perform a check to ensure that the matched keypoint corresponded to the bounding box from this object (e.g. the bin keypoint it was matched to could have been the frisbee). The true precision and recall of my experiments is likely lower than report in Tables 1 - 5.
 
+## Instructions to Run Programs
+
+### Alden's Keypoint-Based Approach
+
+For a demonstration of both SIFT and tfeat matching, I created `kpt_matching_test.py`. The program matches both the SIFT and CNN-based tfeat descriptors to their respective bin descriptors. It uses 9 training objects, and employs Lowe's Ratio Test @ 0.6. For this reason, it is unlikely to match a CNN-based descriptor (see Table 3).
+
+To run this program:
+1. SSH into ND CRC machines (or another cluster)
+    `ssh -CY user@crcfe01.crc.nd.edu`
+2. Clone this Git
+    `git clone https://github.com/aldenkane/cv2TermProject.git`
+3. Obtain access to a GPU with CUDA support
+    `qrsh -q gpu -l gpu_card=1`
+4. Create a Conda environment with the pertinent requirements
+    `conda create --name alden_cv2 --file `
+ 
+
+All relevant programs that I wrote are housed in `src`. A description of useful programs that I wrote are found below:
+-`alden_cv2_functions.py`: Houses helper functions for matching found items to groundtruth labels, generating masks for bins, HSV value segmentation, and other functions that were relevant in running my experiments
+-`figure_gen_sift`: Uses SIFT to match one object photo to one bin photo and draws keypoints. Used for creating figures for report
+-`figure_gen_tfeat`: Uses tfeat to match one object photo to one bin photo and draws keypoints. Used for creating figures for report
+-`generate_SIFT_library`: Used to calculate SIFT descriptors, write them to .npy files, and create libraries of descriptors for experiments
+-`generate_tfeat_library`:  Used to calculate tfeat descriptors, write them to .npy files, and create libraries of descriptors for experiments
+-`kpt_matching_test`: Test program for Dr. Czajka, Lucas
+-`l2b_sift_experiment`: SIFT matching experiment for Tables 1 and 2
+-`l2b_tfeat_experiment`: tfeat matching experiment for Tables 3 and 4

@@ -39,7 +39,7 @@ TFEAT_DESCRIPTOR_FILES = []
 RES_SCALE_BIN = 0.6
 PATH_TO_TEST_JPGS = '../collection/mobi_test_jpgs'
 PATH_TO_TEST_JSON = '../collection/mobi_test_json'
-LOWE_THRESHOLD = 0.7
+LOWE_THRESHOLD = 0.6
 IGNORE_THRESHOLD = 2
 BIN_IMG_PATH = '../collection/mobi_test_jpgs/l2_al1_m_side_4.jpg'
 
