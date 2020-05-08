@@ -2,7 +2,7 @@
 
 ## (a) Methods and Models
 
-###Alden's Keypoint-Based Approach
+### Alden's Keypoint-Based Approach
 
 I was motivated to attempt solutions that did not require deep learning for object detection.  I also wanted to incorporate traditional computer vision methods to achieve higher detection accuracy. Methods and models that I used are:
 1. Segmenting for the tote based on color
@@ -59,6 +59,7 @@ I ran experiments that performed SIFT descriptor matching for 1, 3, 5, 7, and 9 
 **Table 2.** SIFT Matching Results w/ Lowe's Ratio Test @ 0.7
 
 **CNN-Based Keypoint Descriptor Matching**
+
 SIFT struggled with spurious matches.  To account for these inadequacies and try to achieve higher precision, I used [Balntas' et al.'s "Learning local feature descriptors with triplets and shallow convolutional neural networks"](https://github.com/vbalnt/tfeat) to experiment with CNN-based replacements for generating feature descriptors. Their model, `tfeat`, uses a deterministic keypoint detector (e.g. SIFT, BRISK) to generate keypoints for an image, then samples a patch around the keypoint to generate a replacement descriptor. It is trained on the [Phototour Dataset](http://phototour.cs.washington.edu/patches/default.htm), which has ground-truthed matched patches from architecture. It is similar to the work of [Han et al (MatchNet)](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Han_MatchNet_Unifying_Feature_2015_CVPR_paper.pdf) and [Simo-Serra et al](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Simo-Serra_Discriminative_Learning_of_ICCV_2015_paper.pdf).
 
 Using this, I generated descriptor libraries (housed in `tfeat_descriptor_library`) of the same structure as those for SIFT, then ran experiments identical to those with SIFT. I wanted to compare the precision/recall of these descriptors, and prod how effective these descriptors were as more training data was added.
