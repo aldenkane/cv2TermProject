@@ -108,3 +108,58 @@ Precision: 0.6879
 Recall: 0.2761
 Time to Run: 16.168066263198853 seconds
 ------------------------------------------
+OBJ --> BIN
+Training Object Samples: 1
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 71
+False Positives: 27
+False Negatives: 360
+Precision: 0.7245
+Recall: 0.1647
+Time to Run: 9.95532488822937 seconds
+------------------------------------------
+OBJ --> BIN
+Training Object Samples: 3
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 221
+False Positives: 121
+False Negatives: 210
+Precision: 0.6462
+Recall: 0.5128
+Time to Run: 12.853379011154175 seconds
+------------------------------------------
+OBJ --> BIN
+Training Object Samples: 5
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 253
+False Positives: 154
+False Negatives: 178
+Precision: 0.6216
+Recall: 0.587
+Time to Run: 12.208023071289062 seconds
+------------------------------------------
+OBJ --> BIN
+Training Object Samples: 7
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 306
+False Positives: 181
+False Negatives: 125
+Precision: 0.6283
+Recall: 0.71
+Time to Run: 13.893146991729736 seconds
+------------------------------------------
+OBJ --> BIN
+Training Object Samples: 9
+Ratio Test Value: 0.7
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 348
+False Positives: 199
+False Negatives: 83
+Precision: 0.6362
+Recall: 0.8074
+Time to Run: 17.258743047714233 seconds
+------------------------------------------

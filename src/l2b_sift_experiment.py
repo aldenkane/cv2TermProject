@@ -1,4 +1,4 @@
-l2b_sift_experiment.py# l2b_sift_experiment.py
+# l2b_sift_experiment.py
 # Takes library of SIFT descriptors by loading numpy arrays and matches them to bin images
 # Notre Dame Computer Vision 2 Term Project
 #   Author: Alden Kane
@@ -23,7 +23,7 @@ DESCRIPTOR_FILES = []
 RES_SCALE_BIN = 0.6
 PATH_TO_TEST_JPGS = '../collection/mobi_test_jpgs'
 PATH_TO_TEST_JSON = '../collection/mobi_test_json'
-LOWE_THRESHOLD = 0.6
+LOWE_THRESHOLD = 0.7
 IGNORE_THRESHOLD = 2
 
 # Assemble List of Descriptor Files
