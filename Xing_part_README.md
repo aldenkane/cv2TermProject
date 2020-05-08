@@ -13,7 +13,7 @@ For yolo transfer learning go into folder darknet_new. The requirements are the 
 From our preliminary results, we found that our raw tagged object data was not enough for the system to learn the correct tagging of clustered objects. To run an example of this run the following:
 head data/datasets/valid_obj_green.txt | ./darknet cfg/yolov3_objects_only.cfg backup/yolov3_objects_only_final.weights
 
-![Figure 1. Training on objects only](/report_images/masks.png)
+![Figure 1. Training on objects only](/report_images/objects_only.png)
 
 We also combined the individual object pictures with the tagged bin pictures the results can be seen by run the following:
 head data/valid_totes.txt | ./darknet cfg/yolov3_set_aside.cfg backup/yolov3_set_aside_2000.weights
@@ -29,10 +29,12 @@ To address this we did the following experiments:
 2. We resized the images of the individual objects and added padding around it so that it would be proportionally similar to what we expect to see in the bin photos. We tried padding it with white pixels similar to the background and combined it with our bin data. Again we do a random 80/20 split and we get an average IOU of 24.5%
   a. Run the following to see examples: head data/valid_white.txt | ./darknet cfg/yolov3_resize_white.cfg backup/yolov3_resize_white_final.weights
   b. For the average IOU run python get_iou.py results/resize_white/
+![Figure 4. Training on all objects resized with white pixels and bin images](/report_images/resize_white_3.png) 
+
 3. We resized those same images but pad with green pixels since our objects are in the green plastic tote. Doing the same thing as in experiment 2 we get an average IOU of 47.42% The improvement here could be due to overfitting so we use both data in further experiments.
   a. Run the following to see examples: head data/valid_2.txt | ./darknet cfg/yolov3_resize.cfg backup/yolov3_resize_final.weights
   b. For the average IOU run python get_iou.py results/resize_green/
-  
+![Figure 5. Training on all objects resized with green pixels and bin images](/report_images/resize_green_3.png)   
 To further understand what the neural network is capable of learning from what it can't we divide the bin data based on features of the lighting, angle, and sensor. This is so we can see what has a greater effect on the models abiliy to learn.
 
 4. Ligthing: for this experiment we include resized images along with all bin images taken under al1 lighting conditions. The validation set is thus all the images taken under the other lighting conditions. This we found was challenging for the system to learn because there was only 1/3 of all bin data in training and two different lighting conditions to test for. 
