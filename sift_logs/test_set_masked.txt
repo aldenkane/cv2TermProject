@@ -1,0 +1,6 @@
+OBJ --> BIN
+Training Object Samples: 9
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+Positives: 35
+------------------------------------------

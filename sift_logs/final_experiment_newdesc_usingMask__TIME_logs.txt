@@ -163,3 +163,31 @@ Precision: 0.6362
 Recall: 0.8074
 Time to Run: 17.258743047714233 seconds
 ------------------------------------------
+OBJ --> BIN
+Training Object Samples: 9
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 130
+False Positives: 57
+False Negatives: 301
+Precision: 0.6952
+Recall: 0.3016
+Time to Run: 17.641155004501343 seconds
+------------------------------------------
+OBJ --> BIN
+Training Object Samples: 9
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+True Positives: 130
+False Positives: 57
+False Negatives: 301
+Precision: 0.6952
+Recall: 0.3016
+Time to Run: 16.767961978912354 seconds
+------------------------------------------
+OBJ --> BIN
+Training Object Samples: 9
+Ratio Test Value: 0.6
+Ignored Matches w/ Less than K Occurrences, K: 2
+Positives: 130
+------------------------------------------
