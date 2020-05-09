@@ -116,5 +116,6 @@ with open('../sift_logs/test_set_masked.txt', 'a') as file:
     print('Positives: ' + str(POSITIVES))
     print('------------------------------------------')
 
+print('Finished Program, Positives:' + str(POSITIVES))
 
 
