@@ -158,7 +158,9 @@ All relevant programs that I wrote are housed in `src`. A description of useful 
 -`generate_tfeat_library`:  Used to calculate tfeat descriptors, write them to .npy files, and create libraries of descriptors for experiments
 -`kpt_matching_test`: Test program for Dr. Czajka, Lucas
 -`l2b_sift_experiment`: SIFT matching experiment for Tables 1 and 2
+-`l2b_sift_test.py`: SIFT matching on Dr. Czajka's test set
 -`l2b_tfeat_experiment`: tfeat matching experiment for Tables 3 and 4
+-`l2b_tfeat_test.py`: tfeat matching on Dr. Czajka's test set
 
 ## Consent for Amazon Robotics
 
