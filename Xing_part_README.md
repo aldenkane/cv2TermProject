@@ -71,10 +71,17 @@ The results of test can be seen by running head data/test.txt in any of the abov
 
 From these experiments it seem that individual objects alone are not enough for the system to recognize it in the wild. We definitely need some number of in context data. With that it is also very important scale the individual objects such that they aren't disportionally larger than what we expect to see in context. Lastly certain changes are easy for the system to compensate for. For example, going from higher resolution to lower resolution is much easier than the other way around, and varying angles are very hard for the system to recognize. 
  
-1.) The minumum amount of information a combination of tagged bins in differing angles layouts and lightning are neccessary to get reliable detection. 
-2.) Occlusion will hurt the systems because it will expect to tag data in similar in size to what it has seen in training. 3.) Without doing ablation study we are unsure what the absolute minimum amount of information is needed. The foot print of the model is inevitably large because there are so many weights for the model to learn. Training time is relatively high around 3-4 hours per model. 
+1.) The minumum amount of information a combination of tagged bins in differing angles layouts and lightning are neccessary to get reliable detection.
+
+2.) Occlusion will hurt the systems because it will expect to tag data in similar in size to what it has seen in training. 
+
+3.) Without doing ablation study we are unsure what the absolute minimum amount of information is needed. The foot print of the model is inevitably large because there are so many weights for the model to learn. Training time is relatively high around 3-4 hours per model. 
+
 4.) This method is robust to illumination, assuming we rescale incoming images it can be rebust to scale, assuming that we have the highest resolution in training it is robust to sensors changes, but it is considerably weaker in rotation. 
+
 5.) Training here is neccessary and experimentally I found that around 2000 epochs is neccessary, at 1000 epochs there is still sign of undertraining and not much changes at 4000 epoch.
+
 6.) This method can be scaled but it does require tagged bin data, without which it rarely detect objects.
+
 7.) Depending on how we expand the categories what new objects share a tag it could scale up. Although it could not detect novel objects.
 
