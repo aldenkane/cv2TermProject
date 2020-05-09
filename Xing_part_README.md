@@ -37,6 +37,8 @@ To address this we did the following experiments:
     - Run the following to see examples: head data/valid_2.txt | ./darknet cfg/yolov3_resize.cfg backup/yolov3_resize_final.weights
     - For the average IOU run python get_iou.py results/resize_green/
 ![Figure 5. Training on all objects resized with green pixels and bin images](/report_images/resize_green_3.png)   
+
+
 To further understand what the neural network is capable of learning from what it can't we divide the bin data based on features of the lighting, angle, and sensor. This is so we can see what has a greater effect on the models abiliy to learn.
 
 4. Ligthing: for this experiment we include resized images along with all bin images taken under al1 lighting conditions. The validation set is thus all the images taken under the other lighting conditions. This we found was challenging for the system to learn because there was only 1/3 of all bin data in training and two different lighting conditions to test for. 
