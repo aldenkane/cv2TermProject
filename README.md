@@ -47,7 +47,7 @@ To combat spurious matches, I qualitatively experimented with the frequency of t
 With the previously described masking procedure for bins and a lower frequency keypoint detector, I had a better SIFT implementation for this challenge. Figure 4 shows fewer keypoints in a well-cropped image, with a lack of keypoints outside the bin from the mask.
 
 ![Good Sift Detector](/report_images/nice_frisbee.png)
-<div align ="center">Figure 4. SIFT Matcher Working Well due w/ Lower Frequency Detector, No Keypoints Outside Bin from Mask</div>
+<div align ="center">Figure 4. SIFT Matcher Working Well w/ Lower Frequency Detector, No Keypoints Outside Bin from Mask</div>
 
 
 I generated a library of SIFT descriptors for the 11 classes in our dataset (`['Paintbrush', 'Spray_Sunscreen', 'Rub_Sunscreen', 'Dice_Container', 'Tape', 'Cetaphil', 'Sunglasses', 'Pillbottle', 'Fuzzy', 'Marker', 'Frisbee']`) by randomly sampling 1, 3, 5, 7, and 9 distinct mobile images containing only the object of interest, generating SIFT descriptors for them, and then appending the descriptors together in `.npy` files. These are housed in the `sift_descriptor_library` directory. This allowed me to experiment with the amount of training data needed to get reasonable accuracy for SIFT matching. Descriptor files with fewer training images have less information from different orientations of the objects of interest.
@@ -156,6 +156,13 @@ Spurious matches still occur due to the relatively little amount of information 
 
 --------------------
 ## Xing's Yolo Transfer Learning Experiments
+
+For yolo transfer learning go into folder darknet_new. The requirements are the same as those in practical 7. To see the popup of the tagged pictures on crc gpu machines:
+1. Log into crc via ssh username@crcfe02.crc.nd.edu.
+2. Open and interactive session via qsh -q gpu -l gpu=1.
+3. Set gpu to an available gpu via setenv CUDA_VISIBLE_DEVICES $SGE_HGR_gpu_card
+4. Load cuda and opencv vi module load cuda/10.0 opencv
+5. Unzip the folder as long as your running on gpu this should work.
 
 From our preliminary results, we found that our raw tagged object data was not enough for the system to learn the correct tagging of clustered objects. To run an example of this run the following:
 head data/datasets/valid_obj_green.txt | ./darknet cfg/yolov3_objects_only.cfg backup/yolov3_objects_only_final.weights
@@ -295,5 +302,5 @@ Collection, cropping, and annotation of datasets was a collaborative effort. We 
 -Balntas et al.'s ["Learning local feature descriptors with triplets and shallow convolutional neural networks"](http://www.bmva.org/bmvc/2016/papers/paper119/paper119.pdf) and its corresponding [open-source code](https://github.com/vbalnt/tfeat) were used for generating CNN-based keypoint descriptors. The `phototour.py`, `tfeat-test.py`, `tfeat_model.py`, and `tfeat_utils.py` programs in the `src` directory are theirs. The models in the `pretrained-models` folder also come from them
 -Dr. David Lowe's ["Distinctive Image Features from Scale-Invariant Keypoints"](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf) and corresponding SIFT programs were heavily employed in this project
 -Han et al.'s ["MatchNet: Unifying Feature and Metric Learning for Patch-Based Matching"](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Han_MatchNet_Unifying_Feature_2015_CVPR_paper.pdf) was a motivating paper for this project
--Simo-Serra et al.'s ["Discriminative Learning of Deep Convolutional Feature Point Descriptors"](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Simo-Serra_Discriminative_Learning_of_ICCV_2015_paper.pdf)
--PJ Redmon's [YOLOv3 and Darknet Neural Network](https://pjreddie.com/yolo/) were used Xing's experiments with YOLOv3
+-Simo-Serra et al.'s ["Discriminative Learning of Deep Convolutional Feature Point Descriptors"](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Simo-Serra_Discriminative_Learning_of_ICCV_2015_paper.pdf) was a motivating paper for this project
+-PJ Redmon's [YOLOv3 and Darknet Neural Network](https://pjreddie.com/yolo/) were used in Xing's experiments with YOLOv3 and critical to this project
