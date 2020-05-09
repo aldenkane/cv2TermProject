@@ -13,7 +13,7 @@ I was motivated to attempt solutions that did not require deep learning for obje
 
 As this project presented object detection in an engineered environment (i.e. bin of known size and color), using this information to occlude background noise (e.g. floor around bin, carpet, edges of the bin) is a practical means of removing spurious detections. I achieved this by segmenting the image for all 'H' values in the HSV color space within a range of [50,76]. The function `generate_bin_mask(img)` in `alden_cv2_functions.py` achieves this. It takes an RGB image as an argument, and returns a 1-channel mask for the bin.
 
-!Generated Masks for Bins](/report_images/masks.png)
+![Generated Masks for Bins](/report_images/masks.png)
 
 <div align="center">Figure 1. Sample of Generated Masks for Bins</div>
 
@@ -36,10 +36,10 @@ CNN-based keypoint descriptors are good inasmuch as once descriptors are generat
 
 ## (b) Experiments Conducted
 
-Early experiments with SIFT showed that it is prone to spurious matches, as seen in Figure 3.
+Early experiments with SIFT showed that it is prone to spurious matches (especially in an uncropped image!), as seen in Figure 3.
 
 ![Spurious Matches w/ SIFT](/report_images/spurious.png)
-<div align ="center">Figure 3. Spurious Matches w/ SIFT</div>
+<div align ="center">Figure 3. Spurious Matches w/ SIFT in an Uncropped Image</div>
 
 To combat spurious matches, I qualitatively experimented with the frequency of the DoG detector. I lowered the frequency of the detector by setting the contrast threshold to 0.06, as opposed to Lowe's stock value of 0.04, which aided in removing spurious matches to the carpet and other objects. Using openCV 3.4.2.16, this is implemented as `sift = cv2.xfeatures2d.SIFT_create(contrastThreshold = 0.06, edgeThreshold = 10)`
 
@@ -54,7 +54,7 @@ I generated a library of SIFT descriptors for the 11 classes in our dataset (`['
 
 In generating descriptor libraries of known objects and matching object images to bin images, I rescaled object images to be 20% of their original size,  while scaling bin images to be 60% of their original size. I hypothesized that keypoint detectors would work better if the object was a similar size in the training/reference images as it was in the bin, so scaling the object image to be approximately 1/3 the size of the bin was a way to achieve this.
 
-For matching SIFT descriptors, I used openCV's `cv2.FlannBasedMatcher` (Fast Library for Approximate Nearest Neighbors), which implements a fast knn matcher for feature descriptors. I further applied Lowe's Ratio Test to sort for good matches. This test removes spurious keypoint matches by taking the ratio of the Euclidean distance of the two closest knn matches to a point of interest (i.e. the two nearest descriptors to a descriptor being matched), then counting the match as good if it is lower than a set threshold, and bad if it is above this threshold. The intuition here is that "strong" or true matches are more likely to be distinct (i.e. lower Euclidean distance to the point of interest) than spurious matches. Lowe proposed a threshold of 0.8 in his paper, but I experimented with lower values (e.g. 0.6, 0.7) for higher precision. After performing Lowe's Ratio Test, I also ignored objects that only had one matches descriptor.
+For matching SIFT descriptors, I used openCV's `cv2.FlannBasedMatcher` (Fast Library for Approximate Nearest Neighbors), which implements a fast knn matcher for feature descriptors. I further applied Lowe's Ratio Test to sort for good matches. This test removes spurious keypoint matches by taking the ratio of the Euclidean distance of the two closest knn matches to a point of interest (i.e. the two nearest descriptors to a descriptor being matched), then counting the match as good if it is lower than a set threshold, and bad if it is above this threshold. The intuition here is that "strong" or true matches are more likely to be distinct (i.e. lower Euclidean distance to the point of interest) than spurious matches. Lowe proposed a threshold of 0.8 in his paper, but I experimented with lower values (e.g. 0.6, 0.7) for higher precision. After performing Lowe's Ratio Test, I also ignored objects that only had one matched descriptor.
 
 I had early challenges with the knn matcher – I was initially matching the bin descriptors to the object descriptors, instead of the object descriptors to the bin descriptors. Results I was getting seemed nonsensical (the precision/recall curves didn't align with what I expected) – but I learned that **finding the nearest neighbors of a descriptor from the bin is not the same as finding the nearest neighbors of a descriptor from the library of known objects.** Looking for the nearest neighbors of bin descriptors results in crowding of the knn matcher and poor separation of feature descriptors – the knn matcher is more likely to match descriptors of non-interest (e.g. edge of bin) to the descriptors of interest (those of the known objects). **For keypoint matching in a dense cluster, object descriptors should be matched to bin descriptors, rather than bin descriptors to object descriptors**
 
@@ -113,9 +113,10 @@ In examining convolutional feature descriptors (housed in `tfeat_descriptor_libr
 ## (c) Detection Accuracy
 
 My methods used no bin images for training, so reported accuracy metrics are run on test sets that include all mobile bin images. I used precision and recall to quantify accuracy, as these are common in computer vision/pattern recognition and were suitable for the method by which I was determining true and false positives. 
--A "true positive" occurred if the object's descriptor file was matched to the descriptors from the bin and the object was present in the ground truth labels for the bin
--A "false positive" occured if the object's descriptor file was matched and the object wasn't present in the ground truth labels for the bin
--A "false negative" occured if the object's descriptor file wasn't matched, but was present in the ground truth labels for the bin.  
+
+- A "true positive" occurred if the object's descriptor file was matched to the descriptors from the bin and the object was present in the ground truth labels for the bin
+- A "false positive" occured if the object's descriptor file was matched and the object wasn't present in the ground truth labels for the bin
+- A "false negative" occured if the object's descriptor file wasn't matched, but was present in the ground truth labels for the bin.  
 
 **Note:** this method of determining true positives can still admit to spurious matches, i.e. if an object (say Spray_Sunscreen) was matched to a bin and present in the corresponding ground truth labels file, it could have been spuriously matched to another object in the bin (e.g. Frisbee).  I did not perform a check to ensure that the matched keypoint corresponded to the bounding box from this object. The true precision and recall of my experiments is likely lower than reported in Tables 1 - 5. For this reason, I report accuracy metrics in Table 5 using Lowe's Ratio Test @ 0.6, as these experiments are less likely to have spurious "True Positives"
 
@@ -141,9 +142,9 @@ My methods used no bin images for training, so reported accuracy metrics are run
 
 Ignoring the previously noted experimental flaws in logging true positives, SIFT descriptors and tfeat descriptors both produce spurious matches. They can both achieve decent precision, but both do so with low recall. Increasing the number of training images in the training libraries increases recall, but also increases spurious matches.
 
-**CNN-based keypoint descriptors are useful in matching images, and were shown to have higher precision than SIFT descriptors (Table 4 vs. Table 1), with more permissive values of Lowe's Ratio test.**
+**CNN-based keypoint descriptors are useful in matching images, and were shown to have higher precision than SIFT descriptors (Table 4 vs. Table 1) with more permissive values of Lowe's Ratio test.**
 
-When the bin masks were used in the test set, no spurious matches were found – this is a hack, as my mask generation was only configured for green bins (there was one in the test set). When no masks were used in the test set, spurious positives occurred for both the SIFT and CNN-based keypoint descriptors. This shows that both methods, as is, are insufficient for object detection in a dense cluster. However, the use of masks to occlude background noise is effective in removing false positives and matches. 
+When the bin masks were used in the test set, no spurious matches were found – this is a hack, as my mask generation was only configured for green bins (there was one in the test set). When no masks were used in the test set, spurious positives occurred for both the SIFT and CNN-based keypoint descriptors. This shows that both methods, as is, are insufficient for object detection in a dense cluster. Nevertheless, the use of masks to occlude background noise is effective in preventing spurious matches. 
 
 **Test set results support using top-down information (color, size of bin) about the object detection scene to remove background noise**
 
@@ -152,7 +153,7 @@ Qualitative analysis of images has shown that lower values of Lowe's ratio test 
 Spurious matches still occur due to the relatively little amount of information held in a keypoint descriptor. Future work with keypoint descriptors should focus on:
 
 -Composing the SIFT and CNN-descriptor libraries of fewer, but higher strength descriptors (openCV keypoint objects have strength associated with them), as this would give better separation in the feature space of knn matchers for feature descriptors and lead to fewer spurious matches
--Training a new triplet network for CNN-based keypoint descriptors, customized to the task of object detection. I elected to use Balntas et al's open source code here, as creating and training a new model here would have required a massive annotation task of ground-truthing patch pairs on object images. This extended past the scope of the project, but would likely yield better results
+-Training a new triplet network for CNN-based keypoint descriptors, customized to the task of object detection. I elected to use Balntas et al's open source code here, as creating and training a new model here would have required a massive annotation task of ground-truthing patch pairs on object images. This extended past the scope of the project, but would likely yield better results.
 
 --------------------
 ## Xing's Yolo Transfer Learning Experiments
@@ -265,16 +266,16 @@ To run this program:
 8. Command line output will show matched SIFT and CNN-Based Descriptors. If X forwarding is configured correctly, matplotlib will show the bin mask and original image
  
 All relevant programs that I wrote are housed in `src`. A description of useful programs that I wrote are found below:
--`alden_cv2_functions.py`: Houses helper functions for matching found items to groundtruth labels, generating masks for bins, HSV value segmentation, and other functions that were relevant in running my experiments
--`figure_gen_sift`: Uses SIFT to match one object photo to one bin photo and draws keypoints. Used for creating figures for report
--`figure_gen_tfeat`: Uses tfeat to match one object photo to one bin photo and draws keypoints. Used for creating figures for report
--`generate_SIFT_library`: Used to calculate SIFT descriptors, write them to .npy files, and create libraries of descriptors for experiments
--`generate_tfeat_library`:  Used to calculate tfeat descriptors, write them to .npy files, and create libraries of descriptors for experiments
--`kpt_matching_test`: Test program for Dr. Czajka, Lucas
--`l2b_sift_experiment`: SIFT matching experiment for Tables 1 and 2
--`l2b_sift_test.py`: SIFT matching on Dr. Czajka's test set
--`l2b_tfeat_experiment`: tfeat matching experiment for Tables 3 and 4
--`l2b_tfeat_test.py`: tfeat matching on Dr. Czajka's test set
+- `alden_cv2_functions.py`: Houses helper functions for matching found items to groundtruth labels, generating masks for bins, HSV value segmentation, and other functions that were relevant in running my experiments
+- `figure_gen_sift`: Uses SIFT to match one object photo to one bin photo and draws keypoints. Used for creating figures for report
+- `figure_gen_tfeat`: Uses tfeat to match one object photo to one bin photo and draws keypoints. Used for creating figures for report
+- `generate_SIFT_library`: Used to calculate SIFT descriptors, write them to .npy files, and create libraries of descriptors for experiments
+- `generate_tfeat_library`:  Used to calculate tfeat descriptors, write them to .npy files, and create libraries of descriptors for experiments
+- `kpt_matching_test`: Test program for Dr. Czajka, Lucas
+- `l2b_sift_experiment`: SIFT matching experiment for Tables 1 and 2
+- `l2b_sift_test.py`: SIFT matching on Dr. Czajka's test set
+- `l2b_tfeat_experiment`: tfeat matching experiment for Tables 3 and 4
+- `l2b_tfeat_test.py`: tfeat matching on Dr. Czajka's test set
 
 ### Xing's Yolo Transfer Learning Experiments
 
@@ -297,10 +298,10 @@ Collection, cropping, and annotation of datasets was a collaborative effort. We 
 
 ## Citations, References, and Acknowledgements
 
--Thank you to Dr. Adam Czajka and Lucas Parzianello of Notre Dame for their direction, advice, and expertise with this project
--Thank you to Amazon Robotics for their sponsorship of this project
--Balntas et al.'s ["Learning local feature descriptors with triplets and shallow convolutional neural networks"](http://www.bmva.org/bmvc/2016/papers/paper119/paper119.pdf) and its corresponding [open-source code](https://github.com/vbalnt/tfeat) were used for generating CNN-based keypoint descriptors. The `phototour.py`, `tfeat-test.py`, `tfeat_model.py`, and `tfeat_utils.py` programs in the `src` directory are theirs. The models in the `pretrained-models` folder also come from them
--Dr. David Lowe's ["Distinctive Image Features from Scale-Invariant Keypoints"](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf) and corresponding SIFT programs were heavily employed in this project
--Han et al.'s ["MatchNet: Unifying Feature and Metric Learning for Patch-Based Matching"](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Han_MatchNet_Unifying_Feature_2015_CVPR_paper.pdf) was a motivating paper for this project
--Simo-Serra et al.'s ["Discriminative Learning of Deep Convolutional Feature Point Descriptors"](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Simo-Serra_Discriminative_Learning_of_ICCV_2015_paper.pdf) was a motivating paper for this project
--PJ Redmon's [YOLOv3 and Darknet Neural Network](https://pjreddie.com/yolo/) were used in Xing's experiments with YOLOv3 and critical to this project
+- Thank you to Dr. Adam Czajka and Lucas Parzianello of Notre Dame for their direction, advice, and expertise with this project
+- Thank you to Amazon Robotics for their sponsorship of this project
+- Balntas et al.'s ["Learning local feature descriptors with triplets and shallow convolutional neural networks"](http://www.bmva.org/bmvc/2016/papers/paper119/paper119.pdf) and its corresponding [open-source code](https://github.com/vbalnt/tfeat) were used for generating CNN-based keypoint descriptors. The `phototour.py`, `tfeat-test.py`, `tfeat_model.py`, and `tfeat_utils.py` programs in the `src` directory are theirs. The models in the `pretrained-models` folder also come from them
+- Dr. David Lowe's ["Distinctive Image Features from Scale-Invariant Keypoints"](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf) and corresponding SIFT programs were heavily employed in this project
+- Han et al.'s ["MatchNet: Unifying Feature and Metric Learning for Patch-Based Matching"](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Han_MatchNet_Unifying_Feature_2015_CVPR_paper.pdf) was a motivating paper for this project
+- Simo-Serra et al.'s ["Discriminative Learning of Deep Convolutional Feature Point Descriptors"](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Simo-Serra_Discriminative_Learning_of_ICCV_2015_paper.pdf) was a motivating paper for this project
+- PJ Redmon's [YOLOv3 and Darknet Neural Network](https://pjreddie.com/yolo/) were used in Xing's experiments with YOLOv3 and critical to this project
