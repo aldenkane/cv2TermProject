@@ -71,6 +71,8 @@ The results of test can be seen by running head data/test.txt in any of the abov
 
 From these experiments it seem that individual objects alone are not enough for the system to recognize it in the wild. We definitely need some number of in context data. With that it is also very important scale the individual objects such that they aren't disportionally larger than what we expect to see in context. Lastly certain changes are easy for the system to compensate for. For example, going from higher resolution to lower resolution is much easier than the other way around, and varying angles are very hard for the system to recognize. 
  
+In regards to the questions this project was set out to answer I found the following: 
+ 
 1.) The minumum amount of information a combination of tagged bins in differing angles layouts and lightning are neccessary to get reliable detection.
 
 2.) Occlusion will hurt the systems because it will expect to tag data in similar in size to what it has seen in training. 
