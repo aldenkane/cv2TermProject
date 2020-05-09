@@ -32,14 +32,14 @@ To account for the inadequacies of SIFT and other deterministic keypoint matcher
 CNN-based keypoint descriptors are good inasmuch as once descriptors are generated for an object and bin, they can be matched without GPU parallelism. They move towards higher fidelity than SIFT/SURF/BRISK, while still maintaining a lower computing cost than pure deep-learning object detection (e.g. Mask R-CNN, YOLOv3, SSDs). An example usage of this is shown below.
 
 ![tfeat Example](report_images/tfeat.png)
-<div align ="center">Figure 2. Tfeat Removing Spurious Matches from BRISK Detector in Top Image, Matching CNN-Based Descriptors in Bottom Image</div>
+<div align ="center">Figure 3. Tfeat Removing Spurious Matches from BRISK Detector in Top Image, Matching CNN-Based Descriptors in Bottom Image</div>
 
 ## (b) Experiments Conducted
 
 Early experiments with SIFT showed that it is prone to spurious matches (especially in an uncropped image!), as seen in Figure 3.
 
 ![Spurious Matches w/ SIFT](/report_images/spurious.png)
-<div align ="center">Figure 3. Spurious Matches w/ SIFT in an Uncropped Image</div>
+<div align ="center">Figure 4. Spurious Matches w/ SIFT in an Uncropped Image</div>
 
 To combat spurious matches, I qualitatively experimented with the frequency of the DoG detector. I lowered the frequency of the detector by setting the contrast threshold to 0.06, as opposed to Lowe's stock value of 0.04, which aided in removing spurious matches to the carpet and other objects. Using openCV 3.4.2.16, this is implemented as `sift = cv2.xfeatures2d.SIFT_create(contrastThreshold = 0.06, edgeThreshold = 10)`
 
@@ -47,7 +47,7 @@ To combat spurious matches, I qualitatively experimented with the frequency of t
 With the previously described masking procedure for bins and a lower frequency keypoint detector, I had a better SIFT implementation for this challenge. Figure 4 shows fewer keypoints in a well-cropped image, with a lack of keypoints outside the bin from the mask.
 
 ![Good Sift Detector](/report_images/nice_frisbee.png)
-<div align ="center">Figure 4. SIFT Matcher Working Well w/ Lower Frequency Detector, No Keypoints Outside Bin from Mask</div>
+<div align ="center">Figure 5. SIFT Matcher Working Well w/ Lower Frequency Detector, No Keypoints Outside Bin from Mask</div>
 
 
 I generated a library of SIFT descriptors for the 11 classes in our dataset (`['Paintbrush', 'Spray_Sunscreen', 'Rub_Sunscreen', 'Dice_Container', 'Tape', 'Cetaphil', 'Sunglasses', 'Pillbottle', 'Fuzzy', 'Marker', 'Frisbee']`) by randomly sampling 1, 3, 5, 7, and 9 distinct mobile images containing only the object of interest, generating SIFT descriptors for them, and then appending the descriptors together in `.npy` files. These are housed in the `sift_descriptor_library` directory. This allowed me to experiment with the amount of training data needed to get reasonable accuracy for SIFT matching. Descriptor files with fewer training images have less information from different orientations of the objects of interest.
