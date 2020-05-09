@@ -13,7 +13,7 @@ I was motivated to attempt solutions that did not require deep learning for obje
 
 As this project presented object detection in an engineered environment (i.e. bin of known size and color), using this information to occlude background noise (e.g. floor around bin, carpet, edges of the bin) is a practical means of removing spurious detections. I achieved this by segmenting the image for all 'H' values in the HSV color space within a range of [50,76]. The function `generate_bin_mask(img)` in `alden_cv2_functions.py` achieves this. It takes an RGB image as an argument, and returns a 1-channel mask for the bin.
 
-![Figure 1. Generated Masks for Bins](/report_images/masks.png)
+!Generated Masks for Bins](/report_images/masks.png)
 
 <div align="center">Figure 1. Sample of Generated Masks for Bins</div>
 
@@ -22,10 +22,12 @@ As this project presented object detection in an engineered environment (i.e. bi
 [SIFT](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf), by Dr. David Lowe, provides feature descriptors of length 128. It uses a difference-of-Gaussians (DoG) function for detecting salient keypoints in an image. It is widely used for image stitching (panoramas, stereovision cameras), but can be applied to object detection.
 
 SIFT and other keypoint detectors require no learning, are robust to occlusion (i.e. they look for matched keypoints, not whole objects), and are fast to run (i.e. no GPU parallelism required). They fall short in that they can't generalize to classes of objects. For a keypoint detector to properly detect an object, it has to be nearly identical to the object in the reference/training library. SIFT is good for detection of a specific make/model product, but poor for general object detection (e.g. it might detect "Nike Air Force Ones", but would not be able to give the class label "Shoes")
+![good_sift](report_images/good_sift.png)
+<div align="center">Figure 2. SIFT Keypoint Matching for "Fuzzy"</div>
 
 **CNN-Based Keypoint Descriptor Matching**
 
-To account for the inadequacies of SIFT and other deterministic keypoint matchers, I used [Balntas' et al.'s "Learning local feature descriptors with triplets and shallow convolutional neural networks"](https://github.com/vbalnt/tfeat) to experiment with CNN-based replacements for generating feature descriptors. Their model, `tfeat`, uses a deterministic keypoint detector (e.g. SIFT, BRISK) to generate keypoints for an image, then samples a patch around the keypoint to generate a replacement descriptor. It is trained on the [Phototour Dataset](http://phototour.cs.washington.edu/patches/default.htm), which has ground-truthed matched patches from architecture (e.g. matching points from different photos of Notre Dame Cathedral). It is similar to the work of [Han et al (MatchNet)](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Han_MatchNet_Unifying_Feature_2015_CVPR_paper.pdf) and [Simo-Serra et al.](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Simo-Serra_Discriminative_Learning_of_ICCV_2015_paper.pdf) I chose this work because of their open-source, easy to implement network.
+To account for the inadequacies of SIFT and other deterministic keypoint matchers, I used [Balntas' et al.'s "Learning local feature descriptors with triplets and shallow convolutional neural networks"](https://github.com/vbalnt/tfeat) to experiment with CNN-based replacements for generating feature descriptors. Their model, `tfeat`, uses a deterministic keypoint detector (e.g. SIFT, BRISK) to generate keypoints for an image, then samples a patch around the keypoint to generate a replacement descriptor. It is trained on the [Phototour Dataset](http://phototour.cs.washington.edu/patches/default.htm), which has ground-truthed matched patches from architecture (e.g. matching points from different photos of Notre Dame Cathedral). It is similar to the work of [Han et al. (MatchNet)](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Han_MatchNet_Unifying_Feature_2015_CVPR_paper.pdf) and [Simo-Serra et al.](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Simo-Serra_Discriminative_Learning_of_ICCV_2015_paper.pdf) I chose this work because of their open-source, easy to implement network.
 
 CNN-based keypoint descriptors are good inasmuch as once descriptors are generated for an object and bin, they can be matched without GPU parallelism. They move towards higher fidelity than SIFT/SURF/BRISK, while still maintaining a lower computing cost than pure deep-learning object detection (e.g. Mask R-CNN, YOLOv3, SSDs). An example usage of this is shown below.
 
@@ -41,12 +43,14 @@ Early experiments with SIFT showed that it is prone to spurious matches, as seen
 
 To combat spurious matches, I qualitatively experimented with the frequency of the DoG detector. I lowered the frequency of the detector by setting the contrast threshold to 0.06, as opposed to Lowe's stock value of 0.04, which aided in removing spurious matches to the carpet and other objects. Using openCV 3.4.2.16, this is implemented as `sift = cv2.xfeatures2d.SIFT_create(contrastThreshold = 0.06, edgeThreshold = 10)`
 
+
 With the previously described masking procedure for bins and a lower frequency keypoint detector, I had a better SIFT implementation for this challenge. Figure 4 shows fewer keypoints in a well-cropped image, with a lack of keypoints outside the bin from the mask.
 
 ![Good Sift Detector](/report_images/nice_frisbee.png)
 <div align ="center">Figure 4. SIFT Matcher Working Well due w/ Lower Frequency Detector, No Keypoints Outside Bin from Mask</div>
 
-I generated a library of SIFT descriptors for the 11 classes in our dataset (`['Paintbrush', 'Spray_Sunscreen', 'Rub_Sunscreen', 'Dice_Container', 'Tape', 'Cetaphil', 'Sunglasses', 'Pillbottle', 'Fuzzy', 'Marker', 'Frisbee']`) by randomly sampling 1, 3, 5, 7, and 9 distinct mobile images containing only the object of interest, generating SIFT descriptors for them, and then appending the descriptors together in `.npy` files. These are housed in `sift_descriptor_library`. This allowed me to experiment with the amount of training data needed to get reasonable accuracy for SIFT matching. Descriptor files with fewer training images have less information from different orientations of the objects of interest.
+
+I generated a library of SIFT descriptors for the 11 classes in our dataset (`['Paintbrush', 'Spray_Sunscreen', 'Rub_Sunscreen', 'Dice_Container', 'Tape', 'Cetaphil', 'Sunglasses', 'Pillbottle', 'Fuzzy', 'Marker', 'Frisbee']`) by randomly sampling 1, 3, 5, 7, and 9 distinct mobile images containing only the object of interest, generating SIFT descriptors for them, and then appending the descriptors together in `.npy` files. These are housed in the `sift_descriptor_library` directory. This allowed me to experiment with the amount of training data needed to get reasonable accuracy for SIFT matching. Descriptor files with fewer training images have less information from different orientations of the objects of interest.
 
 In generating descriptor libraries of known objects and matching object images to bin images, I rescaled object images to be 20% of their original size,  while scaling bin images to be 60% of their original size. I hypothesized that keypoint detectors would work better if the object was a similar size in the training/reference images as it was in the bin, so scaling the object image to be approximately 1/3 the size of the bin was a way to achieve this.
 
@@ -58,7 +62,7 @@ After sorting all of this out, I ran experiments that performed SIFT descriptor 
 
 **SIFT Experimental Results**
 
-|Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)|
+|Train Images| Runtime on Intel Core i7 (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)|
 |----------- | ------------- |------------- | ----------- | ------------- | ----------- | -------------|
 |1 | 9.47 | 20 | 4 | 411 | 83.33 | 4.64|
 |3 | 12.27 |63 | 15 | 368 | 80.77 | 14.62|
@@ -68,7 +72,8 @@ After sorting all of this out, I ran experiments that performed SIFT descriptor 
 
 <div align ="center">Table 1. SIFT Matching Results w/ Lowe's Ratio Test @ 0.6</div>
 
-|Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)|
+
+|Train Images| Runtime on Intel Core i7 (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)|
 |----------- | ------------- |------------- | ----------- | ------------- | ----------- | -------------|
 |1 | 9.95 | 71 | 27 | 360 | 72.45 | 16.47|
 |3 | 12.85 | 221 | 121 | 210 | 64.62 | 51.28|
@@ -78,11 +83,12 @@ After sorting all of this out, I ran experiments that performed SIFT descriptor 
 
 <div align ="center">Table 2. SIFT Matching Results w/ Lowe's Ratio Test @ 0.7</div>
 
+
 In examining convolutional feature descriptors (housed in `tfeat_descriptor_library`), I generated descriptor libraries of the same structure as those for SIFT, then ran experiments identical to those for SIFT. I wanted to compare the precision/recall of these descriptors to those of SIFT, and well as prod how effective these descriptors were as more training data was added.
 
 **CNN-Based Descriptors (tfeat) Experimental Results**
 
-|Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)| Recall (%)|
+|Train Images| Runtime on Nvidia GTX 1080(s)|True Positives|False Positives|False Negatives|Precision (%)| Recall (%)|
 |----------- | ------------- |------------- | ----------- | ------------- | ----------- | -------------|
 |1 | 33.59 | 1 | 0 | 430 | 100.00 | 0.23|
 |3 | 37.84 | 1 | 1 | 430 | 50.00 | 0.23|
@@ -92,7 +98,8 @@ In examining convolutional feature descriptors (housed in `tfeat_descriptor_libr
 
 <div align ="center">Table 3. tfeat Matching Results w/ Lowe's Ratio Test @ 0.6</div>
 
-|Train Images| Runtime (s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)|
+
+|Train Images| Runtime on Nvidia GTX 1080(s)|True Positives|False Positives|False Negatives|Precision (%)|Recall (%)|
 |----------- | ------------- |------------- | ----------- | ------------- | ----------- | -------------|
 |1 | 32.00 | 28 | 3 | 403 | 90.32 | 6.50|
 |3 | 37.26 | 30 | 5 | 401 | 85.71 | 6.96|
@@ -119,7 +126,8 @@ My methods used no bin images for training, so reported accuracy metrics are run
 
 <div align ="center">Table 5. Detection Accuracy on Mobile Bins Dataset for 9 Training Images, Lowe's Ratio Test @ 0.6</div>
 
-| Descriptors | Masks Used? | # of False Positives |
+
+| Descriptors | Bin Masks Used? | # of False Positives |
 |-----------|-----------| -----------|
 | SIFT | Yes | 0 |
 | SIFT | No | 35 |
@@ -128,13 +136,14 @@ My methods used no bin images for training, so reported accuracy metrics are run
 
 <div align ="center">Table 6. Detection Accuracy on Dr. Czajka's Test Set of 13 Images w/ Worst Case Scenario Results Reported (No Masks for Bins, Background Noise Included, Maximum # of Descriptors)</div>
 
+
 ## (d) Commentary on Observed Accuracy
 
-Ignoring the previously noted experimental flaws in logging true positives, SIFT descriptors and tfeat descriptors both produce spurious matches. They can both achieve high precision, but both do so with low recall. Increasing the number of training images in the training libraries increases recall, but also increases spurious matches.
+Ignoring the previously noted experimental flaws in logging true positives, SIFT descriptors and tfeat descriptors both produce spurious matches. They can both achieve decent precision, but both do so with low recall. Increasing the number of training images in the training libraries increases recall, but also increases spurious matches.
 
 **CNN-based keypoint descriptors are useful in matching images, and were shown to have higher precision than SIFT descriptors (Table 4 vs. Table 1), with more permissive values of Lowe's Ratio test.**
 
-When the bin masks were used in the test set, no spurious matches were found – this is a hack, as my mask generation only worked for green bins (there was one in the test set). When no masks were used in the test set, spurious positives occurred for both the SIFT and CNN-based keypoint descriptors. This shows that both methods, as is, are insufficient for object detection in a dense cluster. However, the use of masks to occlude background noise is effective in removing false positives and matches. 
+When the bin masks were used in the test set, no spurious matches were found – this is a hack, as my mask generation was only configured for green bins (there was one in the test set). When no masks were used in the test set, spurious positives occurred for both the SIFT and CNN-based keypoint descriptors. This shows that both methods, as is, are insufficient for object detection in a dense cluster. However, the use of masks to occlude background noise is effective in removing false positives and matches. 
 
 **Test set results support using top-down information (color, size of bin) about the object detection scene to remove background noise**
 
@@ -142,7 +151,7 @@ Qualitative analysis of images has shown that lower values of Lowe's ratio test 
 
 Spurious matches still occur due to the relatively little amount of information held in a keypoint descriptor. Future work with keypoint descriptors should focus on:
 
--Composing the SIFT and CNN-descriptor libraries of fewer, but higher strength descriptors (openCV keypoint objects have strength associated with them), as this would give better separation in the feature space of knn matchers for feature descriptors
+-Composing the SIFT and CNN-descriptor libraries of fewer, but higher strength descriptors (openCV keypoint objects have strength associated with them), as this would give better separation in the feature space of knn matchers for feature descriptors and lead to fewer spurious matches
 -Training a new triplet network for CNN-based keypoint descriptors, customized to the task of object detection. I elected to use Balntas et al's open source code here, as creating and training a new model here would have required a massive annotation task of ground-truthing patch pairs on object images. This extended past the scope of the project, but would likely yield better results
 
 --------------------
@@ -232,13 +241,13 @@ In regards to the questions this project was set out to answer I found the follo
 For a demonstration of both SIFT and tfeat matching, I created `kpt_matching_test.py`. The program matches both the SIFT and CNN-based tfeat descriptors to their respective bin descriptors. It uses 9 training objects, and employs Lowe's Ratio Test @ 0.6. For this reason, it is unlikely to match a CNN-based descriptor, as it has low recall (see Table 3).
 
 To run this program:
-1. SSH into ND CRC machines, with X forwarding to local machine (or another cluster)
+1. SSH into ND CRC machines, with X forwarding to local machine
     `ssh -X user@crcfe01.crc.nd.edu`
 2. Clone this Git and navigate to top-level directory
     `git clone https://github.com/aldenkane/cv2TermProject.git`
 3. Obtain access to a GPU with CUDA support
     `qrsh -q gpu -l gpu_card=1`
-4. Create a Conda environment with the pertinent requirements
+4. Create a Conda environment with the pertinent requirements. openCV 3.4.2 (not 4.x) is an important requirement, as support for SIFT has been deprecated in newer versions
     `conda create --name alden_cv2 --file alden_requirements.txt`
 5. Activate Conda environment
     `conda activate alden_cv2`
@@ -281,8 +290,10 @@ Collection, cropping, and annotation of datasets was a collaborative effort. We 
 
 ## Citations, References, and Acknowledgements
 
--
--
--
--
--
+-Thank you to Dr. Adam Czajka and Lucas Parzianello of Notre Dame for their direction, advice, and expertise with this project
+-Thank you to Amazon Robotics for their sponsorship of this project
+-Balntas et al.'s ["Learning local feature descriptors with triplets and shallow convolutional neural networks"](http://www.bmva.org/bmvc/2016/papers/paper119/paper119.pdf) and its corresponding [open-source code](https://github.com/vbalnt/tfeat) were used for generating CNN-based keypoint descriptors. The `phototour.py`, `tfeat-test.py`, `tfeat_model.py`, and `tfeat_utils.py` programs in the `src` directory are theirs. The models in the `pretrained-models` folder also come from them
+-Dr. David Lowe's ["Distinctive Image Features from Scale-Invariant Keypoints"](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf) and corresponding SIFT programs were heavily employed in this project
+-Han et al.'s ["MatchNet: Unifying Feature and Metric Learning for Patch-Based Matching"](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Han_MatchNet_Unifying_Feature_2015_CVPR_paper.pdf) was a motivating paper for this project
+-Simo-Serra et al.'s ["Discriminative Learning of Deep Convolutional Feature Point Descriptors"](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Simo-Serra_Discriminative_Learning_of_ICCV_2015_paper.pdf)
+-PJ Redmon's [YOLOv3 and Darknet Neural Network](https://pjreddie.com/yolo/) were used Xing's experiments with YOLOv3
