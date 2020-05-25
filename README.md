@@ -1,6 +1,7 @@
 # CSE 40536/60536 Term Project: Object Detection in a Dense Cluster
 
 CSE 40536/60536: Computer Vision II @ University of Notre Dame
+
 [Spring 2020 Course Syllabus](http://adamczajka.pl/files/Computer-Vision-2-syllabus.pdf)
 
 ## Alden's Keypoint-Based Approach
