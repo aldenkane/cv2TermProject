@@ -1,6 +1,6 @@
 # CSE 40536/60536 Term Project: Object Detection in a Dense Cluster
 
-CSE 40536/60536: Computer Vision II @ University of Notre Dame
+CSE 40536/60536: Computer Vision II @ University of Notre Dame, taught by Dr. Adam Czajka
 
 [Spring 2020 Course Syllabus](http://adamczajka.pl/files/Computer-Vision-2-syllabus.pdf)
 
