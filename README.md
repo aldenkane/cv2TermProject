@@ -1,4 +1,7 @@
-# CSE 40536/60536 Term Project: Object Detection in a Dense Cluster for Amazon Robotics
+# CSE 40536/60536 Term Project: Object Detection in a Dense Cluster
+
+CSE 40536/60536: Computer Vision II @ University of Notre Dame
+![Spring 2020 Course Syllabus](http://adamczajka.pl/files/Computer-Vision-2-syllabus.pdf)
 
 ## Alden's Keypoint-Based Approach
 
@@ -299,7 +302,7 @@ Collection, cropping, and annotation of datasets was a collaborative effort. We 
 ## Citations, References, and Acknowledgements
 
 - Thank you to Dr. Adam Czajka and Lucas Parzianello of Notre Dame for their direction, advice, and expertise with this project
-- Thank you to Amazon Robotics for their sponsorship of this project
+- Thank you to Amazon Robotics, industrial partner for CSE40536/60536 Spring 2020 term
 - Balntas et al.'s ["Learning local feature descriptors with triplets and shallow convolutional neural networks"](http://www.bmva.org/bmvc/2016/papers/paper119/paper119.pdf) and its corresponding [open-source code](https://github.com/vbalnt/tfeat) were used for generating CNN-based keypoint descriptors. The `phototour.py`, `tfeat-test.py`, `tfeat_model.py`, and `tfeat_utils.py` programs in the `src` directory are theirs. The models in the `pretrained-models` folder also come from them
 - Dr. David Lowe's ["Distinctive Image Features from Scale-Invariant Keypoints"](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf) and corresponding SIFT programs were heavily employed in this project
 - Han et al.'s ["MatchNet: Unifying Feature and Metric Learning for Patch-Based Matching"](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Han_MatchNet_Unifying_Feature_2015_CVPR_paper.pdf) was a motivating paper for this project
